@@ -1,0 +1,41 @@
+<%-include('../layouts/user/header.ejs')%>
+
+
+
+
+<section class="login_box_area section_gap">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="login_form_inner">
+                    <h3 class="text-center">OTP Verification</h3>
+                    <form action="/register-otp" method="post">
+                        <h6 class="text-danger">Please enter the one-time password<br>to verify your account</h6>
+                        <div>
+                            <span>A code has been sent to</span>
+                            <small>+91 <%=userData.mobile%></small>
+                        </div>
+                        <input type="hidden" name="name" value="<%=userData.name%>">
+                        <input type="hidden" name="email" value="<%=userData.email%>">
+                        <input type="hidden" name="mobile" value="<%=userData.mobile%>">
+                        <input type="hidden" name="password" value="<%=userData.password%>">
+                        <% if (userData.parentReferral) { %>
+                        <input type="hidden" name="parentReferral" value="<%= userData.parentReferral %>">
+                        <% } %>
+                        <div class="col-md-12 form-group d-flex justify-content-center">
+                            <input id="sixth" type="number" name="otp" maxlength="6" class="form-control w-50 text-center" placeholder="X X X X X X" onfocus="this.placeholder = ''" onblur="this.placeholder = 'X X X X X X'">
+                        </div>                        
+                        <div class="mt-4">
+                            <button type="submit" value="submit" class="primary-btn">Validate</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<%-include('../layouts/user/footer.ejs')%>
+
+

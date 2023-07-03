@@ -1,0 +1,102 @@
+<%- include('../../layouts/admin/header.ejs') %>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+
+    <div class="container-fluid">
+        <a href="/admin/dashboard/product/add-product"><button type="button" class="btn btn-primary ">Add
+                Product</button></a>
+        <div class="card shadow mb-4 mt-2">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Product Management</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="example" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>NO</th>
+                                <th>Product</th>
+                                <th>Brand</th>
+                                <th>Stock</th>
+                                <th>Category</th>
+                                <th>Image</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (product.length > 0) { %>
+                                <% product.forEach((item, index) => { %>
+                                  <tr>
+                                    <td><%= index + 1 %></td>
+                                    <td><%= item.name %></td>
+                                    <td><%= item.brand %></td>
+                                    <td><%= item.stock %></td>
+                                    <td><%= item.category.categoryName %></td>
+                                    <td>
+                                      <div class="image-scroll" style="overflow-y: scroll; white-space: nowrap; height: 100px">
+                                        <ul>
+                                          <% item.images.forEach((image) => { %>
+                                            <li style="display: block; margin-right: 10px;">
+                                              <img src="/proImages/<%= image %>" alt="Product Image" width="100%" height="100">
+                                            </li>
+                                          <% }) %>
+                                        </ul>
+                                      </div>
+                                    </td>
+                                    
+                                    <% if (item.status == true) { %>
+                                      <td class="text-success statuss<%= item.productId %>"><%= item.status %></td>
+                                    <% } else { %>
+                                      <td class="text-danger statuss<%= item.productId %>"><%= item.status %></td>
+                                    <% } %>
+                                    <td>
+                                      <ul>                                                    
+                                      <div class="status<%= item.productId %>">
+                                        <% if (item.status == true) { %>
+                                          <button type="button" onclick="productStatusAction('<%= item.productId %>', '<%= item.status %>')" class="btn btn-danger">Unlist</button>
+                                        <% } else { %>
+                                          <button type="button" onclick="productStatusAction('<%= item.productId %>', '<%= item.status %>')" class="btn btn-success">List</button>
+                                        <% } %>
+                                        <a href="/admin/dashboard/product/edit-product<%=item.productId%>"><button type="button" class="btn btn-primary mt-3">Edit</button></a>
+                                        </ul>
+                                      </div>
+                                    </td>
+                                    
+                                  </tr>
+                                <% }) %>
+                              <% } else { %>
+                                <tr>
+                                  <td colspan="7">Empty!</td>
+                                </tr>
+                              <% } %>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>NO</th>
+                                <th>Product</th>
+                                <th>Brand</th>
+                                <th>Stock</th>
+                                <th>Category</th>
+                                <th>Image</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable();
+        });
+    </script>

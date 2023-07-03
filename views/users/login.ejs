@@ -1,0 +1,49 @@
+<%-include('../layouts/user/header.ejs')%>
+
+
+
+	<!--================Login Box Area =================-->
+	<section class="login_box_area section_gap">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="login_box_img">
+						<img class="img-fluid" src="img/login.jpg" alt="">
+						<div class="hover">
+							<h4>New to our website?</h4>
+							<p>
+								Creating an account with Sole Mate is your first step towards unlocking a world of shoe-shopping delights. Join our community of shoe enthusiasts and experience a seamless account creation process that puts you in control.</p>
+							<a class="primary-btn" href="/register">Create an Account</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="login_form_inner">
+						<h3>Log in to enter</h3>
+						<form class="row login_form" action="/login" method="post" id="contactForm" novalidate="novalidate">
+							<div class="col-md-12 form-group">
+								<input type="email" class="form-control" id="name" name="email" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
+							</div>
+							<div class="col-md-12 form-group">
+								<input type="password" class="form-control" id="name" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+							</div>
+
+							<% if (message){ %>
+								<p class="text-danger"><%=message%></p>
+							<% } %>
+							<div class="col-md-12 form-group">
+								<button type="submit" value="submit" class="primary-btn">Log In</button>
+								<p class="mt-3">--- <span class="or-text">or</span> ---</p>
+								<a href="/login_with_number">login with phone number</a>
+
+								<a href="/forgot-password">Forgot Password?</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--================End Login Box Area =================-->
+
+	<%-include('../layouts/user/footer.ejs')%>

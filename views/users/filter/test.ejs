@@ -1,0 +1,114 @@
+<%- include('../../layouts/user/header.ejs') %>
+<%- include('../../layouts/user/nav_bar.ejs') %>
+<section style="margin-top: 10%;">
+  <div class="container">
+    <div class="row justify-content-end">
+      <div class="col-md-8">
+        <div class="d-flex justify-content-end align-items-center p-3">
+          <div class="filter-button">
+            <button class="btn btn-primary btn-sm js-show-filter btn-white">
+              <i class="bi bi-filter"></i>
+              Filter
+            </button>
+          </div>
+          <div class="search-button ml-2">
+            <button class="btn btn-primary btn-sm js-show-search btn-white">
+              <i class="bi bi-search"></i>
+              Search
+            </button>
+          </div>
+        </div>
+
+        <!-- Search product -->
+        <div class="panel-search p-3" style="display: none;">
+          <form class="search-form d-flex align-items-center" method="POST" action="/search">
+            <div class="input-group">
+              <input type="text" class="form-control" name="search" placeholder="Search">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel-filter p-3" style="display: none;">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="filter-category">
+                <h6 class="text-primary">Categories</h6>
+                <ul class="list-unstyled">
+                  <% category.forEach((x) => { %>
+                    <li>
+                      <a href="/brands/<%= x._id %>" class="filter-link">
+                        <%= x.category %>
+                      </a>
+                    </li>
+                  <% }) %>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="filter-price">
+                <h6 class="text-primary">Price</h6>
+                <ul class="list-unstyled">
+                  <li>
+                    <a href="/allProducts" class="filter-link filter-link-active">All</a>
+                  </li>
+                  <li>
+                    <a href="/price?low=0&high=25000" class="filter-link">₹0 - ₹25000</a>
+                  </li>
+                  <li>
+                    <a href="/price?low=25000&high=50000" class="filter-link">₹25000 - ₹50000</a>
+                  </li>
+                  <li>
+                    <a href="/price?low=50000&high=100000" class="filter-link">₹50000 - ₹100000</a>
+                  </li>
+                  <li>
+                    <a href="/price?low=100000&high=150000" class="filter-link">₹100000 - ₹200000</a>
+                  </li>
+                  <li>
+                    <a href="/price?low=150000" class="filter-link">₹200000+</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="filter-sort">
+                <h6 class="text-primary">Sort By</h6>
+                <ul class="list-unstyled">
+                  <li>
+                    <a href="/allProducts" class="filter-link filter-link-active">All</a>
+                  </li>
+                  <li>
+                    <a href="/priceLow?value=1" class="filter-link">Price: Low to High</a>
+                  </li>
+                  <li>
+                    <a href="/priceLow?value=-1" class="filter-link">Price: High to Low</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../../layouts/user/footer.ejs') %>
+
+<script>
+  $(document).ready(function () {
+    $('.js-show-filter').click(function () {
+      $('.panel-filter').slideToggle('slow');
+    });
+
+    $('.js-show-search').click(function () {
+      $('.panel-search').slideToggle('slow');
+    });
+  });
+</script>

@@ -1,0 +1,77 @@
+<%- include('../../layouts/admin/header.ejs') %>
+
+<div class="container mt-5">
+  <h1>Edit Product</h1>
+  <form action="/admin/dashboard/product/get-product" method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="product-name" class="form-label">Product Name</label>
+      <input type="hidden" name="productId" value="<%= productData.productId %>">
+      <input type="text" class="form-control" id="name" name="name" value="<%=productData.name%>" required>
+    </div>
+    <div class="mb-3">
+      <label for="product-description" class="form-label">Product Description</label>
+      <textarea class="form-control" id="product-description"  name="description" rows="4" required><%=productData.description%></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="category-select" class="form-label">Category</label>
+        <select class="form-select" id="category-select" name="category" required style="width: 300px;">
+          <option value="<%=productData.category.categoryId%>"><%=productData.category.categoryName%></option>
+          <% category.forEach((item) => { %>
+          <option value="<%=item.categoryId%>"><%=item.categoryName%></option>
+          <% }) %>
+        </select>
+      </div>
+
+    <div class="mb-3">
+        <label for="product-name" class="form-label">Brand </label>
+        <input type="text" class="form-control" id="product-name" name="brand" value="<%=productData.brand%>" required>
+      </div>
+    <div class="mb-3">
+        <label for="product-price" class="form-label">Stock</label>
+        <input type="number" class="form-control"  name="stock" value="<%=productData.stock%>" required>
+      </div>
+    <div class="mb-3">
+      <label for="product-price" class="form-label">Product Price</label>
+      <input type="number" class="form-control" id="product-price" name="price" value="<%=productData.price%>" required>
+    </div>
+    <div class="mb-3" style="overflow-x: scroll; white-space: nowrap;">
+        <% if (productData.images.length > 0) { %>
+          <% productData.images.forEach((x) => { %>
+            <div style="display: inline-block; margin-right: 10px;">
+              <img src="/proImages/<%= x %>" alt="Product Image" width="200" height="200">
+              <div>
+                <% if (productData.images.length > 1) { %>
+                    <hr>
+                    <a href="/admin/dashboard/product/edit-product/delete-img?id=<%=productData.productId%>&img=<%= x%>"><button type="button" class="btn btn-warning" >Delete</button></a>
+                  <!-- <a href="#" data-product-id="<%=productData.productId%>" data-img="<%=x%>" class="delete-img-btn"><button type="button" class="btn btn-warning">Delete</button></a> -->
+                <% } else { %>
+                    <hr>
+                  <button type="button" class="btn btn-warning disabled " disabled>Delete</button>
+                  <p class="text-danger">Cannot delete the only image</p>
+                <% } %>
+              </div>
+            </div>
+          <% }) %>
+        <% } %>
+      </div>
+      
+      
+    <div class="mb-3">
+        <label for="product-price" class="form-label">Images</label>
+        <input type="file" class="form-control" name="images" multiple >
+      </div>
+      <% if (message=='Product Edit successfully'){ %>
+        <p class="text-success"><%=message%></p>
+      <% } else{%>
+      <p class="text-danger"><%=message%></p>
+
+      <% }%>
+
+    <button type="submit" class="btn btn-primary">Update Product</button>
+  </form>
+</div>
+
+
+
+<%- include('../../layouts/admin/footer.ejs') %>

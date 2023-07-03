@@ -1,0 +1,40 @@
+<%-include('../layouts/user/header.ejs')%>
+
+<section class="login_box_area section_gap">
+  <div class="container">
+    <div class="row justify-content-center"> <!-- Added 'justify-content-center' class to center the content -->
+      <div class="col-lg-6">
+        <div class="login_form_inner">
+          <h3 class="text-center">CREATE AN ACCOUNT</h3> <!-- Added 'text-center' class to center the heading -->
+          <form class="row login_form" action="/register" method="post" id="contactForm" novalidate="novalidate">
+            <div class="col-md-12 form-group">
+              <input required type="text" name="name" class="form-control" id="name" placeholder="Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Name'">
+            </div>
+            <div class="col-md-12 form-group">
+              <input type="email" class="form-control" id="name" name="email" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
+            </div>
+            <div class="col-md-12 form-group">
+              <input required type="number" name="mobile" class="form-control" id="name" placeholder="Mobile Number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile Number'">
+            </div>
+            <div class="col-md-12 form-group">
+              <input required type="password" class="form-control" id="name" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+            </div>
+            <div class="col-md-12 form-group">
+              <input type="text" class="form-control" id="name" name="referral_code" placeholder="Referral code (optional)" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Referral code (optional)'">
+            </div>            
+            <% if (message){ %>
+            <p class="text-danger"><%=message%></p>
+            <% } %>
+            <div class="col-md-12 form-group">
+              <button type="submit" value="submit" class=" primary-btn ">Register</button> <!-- Added 'btn-block' class to make the button full width -->
+              <p class="text-center text-muted mt-5 mb-0">Have already an account? <a href="/login" class="fw-bold text-body"><u>Login here</u></a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<%-include('../layouts/user/footer.ejs')%>

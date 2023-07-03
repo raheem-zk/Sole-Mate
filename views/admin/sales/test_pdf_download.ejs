@@ -1,0 +1,229 @@
+<%- include('../../layouts/admin/header.ejs') %>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <%-include('../../layouts/admin/nav.ejs')%>
+                <div class="container-fluid">
+                    <h1 class="h3 mb-2 text-gray-800 text-center">Sales Report</h1>
+                    <div class="card shadow mb-4 mt-2">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Sales</h6>
+                        </div>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+
+<table id="example" class="display nowrap" style="width:100%">
+    
+    
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Date</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Payment method</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (salesdata && salesdata.length > 0) { %>
+            <% salesdata.forEach((item, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= item.date.toLocaleDateString() %></td>
+                    <td>
+                    <% item.product.forEach((x) => { %>
+                        <% if (x.productId) { %>
+                            <p><%= x.productId.name %></p>
+                        <% } else if (x.bannerId) { %>
+                            <p><%= x.bannerId.name %></p>
+                        <% } %>
+                    <% }) %>
+                    </td>
+                    <td>
+                    <% item.product.forEach((x) => { %>
+                        <p><%= x.quantity %></p>
+                    <% }) %>
+                    </td>
+                    <td><%= item.paymentType %></td>
+                    <td><%= item.total.toFixed(2) %></td>
+                </tr>
+            <% }) %>
+        <% } else { %>
+            <tr>
+                <td colspan="6">
+                    <p class="text-danger">Nothing found</p>
+                </td>
+            </tr>
+        <% } %>
+    <!-- <thead>
+        <tr>
+            <th>No</th>
+            <th>Date</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Payment method</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (salesdata && salesdata.length > 0) { %>
+            <% salesdata.forEach((item, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= item.date.toLocaleDateString() %></td>
+                    <td>
+                    <% item.product.forEach((x) => { %>
+                        
+                        <% if (x.productId) { %>
+                            <p><%= x.productId.name %> ]]]</p>
+                        <% } else if (x.bannerId) { %>
+                            <p><%= x.bannerId.name %></p>
+                        <% } %>
+                    
+                        <p><%= x.quantity %> qqq</p>
+                    
+                    <% }) %>
+                    </td>
+                    <td><%= item.paymentType %></td>
+                    <td><%= item.total %></td>
+                </tr>
+            <% }) %>
+        <% } else { %>
+            <tr>
+                <td colspan="6">
+                    <p class="text-danger">Nothing found</p>
+                </td>
+            </tr>
+        <% } %> -->
+        <!-- <% if (salesdata && salesdata.length > 0) { %>
+            <% salesdata.forEach((item, index)=>{ %>
+                <tr>
+                    <td><%= index + 1%></td>
+                    <td><%= item.date.toLocaleDateString() %></td>
+                <% item.product.forEach((x)=>{ %>
+                    <% if(x.productId){ %>
+                        <td><%= x.productId.name %></td>
+                    <% }else if (x.bannerId){ %>
+                        <td><%= x.bannerId.name %> </td></td>
+                    <% } %>
+                    <td><%=x.quantity %></td>
+                <% }) %>
+                <td><%=item.paymentType %></td>
+                <td><%=item.total %></td>
+            </tr>
+            <% }) %>
+        <% } else { %>
+            <tr>
+                <td colspan="6">
+                    <p class="text-danger">Nothing found</p>
+                </td>
+            </tr>
+        <% } %> -->
+
+        <!-- <% if (salesdata && salesdata.length > 0) { %>
+            <% salesdata.forEach((item, index) => { %>
+                <% if (item.product && item.product.length > 0) { %>
+                    <% item.product.forEach((x) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= item.date.toLocaleDateString() %></td>
+                            <td><%= x.productId %></td>
+                            <td><%= x.quantity %></td>
+                            <td><%= item.paymentType %></td>
+                            <td><%= x.singlePrice * x.quantity %></td>
+                        </tr>
+                    <% }) %>
+                <% } %>
+            <% }) %>
+        <% } else { %>
+            <tr>
+                <td colspan="6">No sales data available</td>
+            </tr>
+        <% } %> -->
+        
+    </tbody>
+    
+    <tfoot>
+        <tr>
+            <th>No</th>
+            <th>Date</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Payment method</th>
+            <th>Total</th>
+        </tr>
+    </tfoot>
+</table>
+
+
+
+
+
+</div>
+</div>
+
+<!-- Footer -->
+<footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2020</span>
+        </div>
+    </div>
+</footer>
+
+</div>
+
+</div>
+
+<a class="scroll-to-top rounded" href="#page-top">
+<i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="login.html">Logout</a>
+    </div>
+</div>
+</div>
+</div>
+
+
+<%- include('../../layouts/admin/footer.ejs') %>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+    $('#example').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
+} );
+</script>
+
+

@@ -1,0 +1,116 @@
+	<%-include('../../layouts/user/header.ejs')%>
+	<%-include('../../layouts/user/nav_bar.ejs')%>
+
+	<!--================Single Product Area =================-->
+	<style>
+		.image-list {
+			float: left;
+			gap: 10px;
+		}
+
+		.image-list-item {
+			list-style-type: none;
+			margin-bottom: 10px;
+		}
+
+		.image-list-item img {
+			width: 70px;
+			height: 70px;
+		}
+
+		.big-image {
+			width: 350px;
+			height: 400px;
+			margin-top: 20px;
+			margin-left: 10px;
+		}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<div class="product_image_area pb-5">
+		<div class="container">
+			<div class="row ">
+				<div class="col-lg-6">
+					<% if (productData.images.length > 0) { %>
+						<ul class="image-list">
+							<% productData.images.forEach((imageArray) => { %>
+								<% imageArray.forEach((image) => { %>
+									<li class="image-list-item"><img src="/proImages/<%= image %>" class="small-image"></li>
+								<% }) %>
+							<% }) %>
+						</ul>
+					<% } %>
+					
+					<img class="big-image" src="/proImages/<%= productData.images[0] %>" alt="">
+				</div>
+				<div class="col-lg-5 offset-lg-1">
+					<div class="s_product_text">
+					<% let proOfferMatch = productOffer.find((x)=> x.product_name.equals(productData.productId)); %>
+					<% let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category.categoryId)); %>
+					<% if(proOfferMatch && offerMatch){ %>
+
+						<h6>₹<%= productData.price - ((productData.price* (offerMatch.discountPercentage + proOfferMatch.discountPercentage ))/100).toFixed(2)  %></h6>
+						<s><h6 class="l-through">₹ <%= productData.price.toFixed(2) %></h6> </s>
+						<span class="text-success"><%=offerMatch.discountPercentage + proOfferMatch.discountPercentage %>% off</span>
+					
+					<% } else if (proOfferMatch && !offerMatch){%>
+						<h6>₹<%= productData.price - ((productData.price* proOfferMatch.discountPercentage)/100)  %></h6>
+						<s><h6 class="l-through">₹ <%= productData.price.toFixed(2) %></h6> </s>
+						<span class="text-success"><%=proOfferMatch.discountPercentage %>% off</span>
+
+					<% } else if (offerMatch && !proOfferMatch) {%>
+						<h6>₹<%= productData.price -((productData.price* offerMatch.discountPercentage)/100)  %></h6>
+						<s><h6 class="l-through">₹ <%= productData.price.toFixed(2) %></h6> </s>
+						<span class="text-success"><%=offerMatch.discountPercentage %>% off</span>
+					<% } else {%>
+						<h6>₹<%= productData.price.toFixed(2) %> </h6>
+					<% }%>
+
+						
+						<!-- <h2>₹<%= productData.price%>.99</h2>  -->
+						<ul class="list">
+							<li><a class="active text-dark"><span>Category</span> : <%= productData.category.categoryName %></a></li>
+							<% if (productData.stock == 0) { %>
+							  <li><a><span>Availability</span> :<%=productData.stock%> <span class="text-danger">Out Of Stock</span></a></li>
+							<% } else if (productData.stock < 5) { %>
+							  <li><a><span>Availability</span> : <%=productData.stock%> <span class="text-warning"">Low Stock</span></a></li>
+							<% } else { %>
+							  <li><a><span>Availability</span> :<%=productData.stock%> <span class="text-success">In Stock</span></a></li>
+							<% } %>
+						  </ul>
+						  
+						<p><%=productData.description%>.</p>
+						<% if (productData.stock == 0) { %>
+							<div class="card_area d-flex align-items-center">
+								<button class="btn primary-btn" >Add to Cart</button>
+								<% if(productData.bannerId){ %>
+								<button class="icon_btn " onclick="addBannerProductTowoshlist('<%=productData.bannerId%>')"><i class="lnr lnr lnr-heart"></i></button>
+							<% }else{ %>
+								<button class="icon_btn " onclick="addTowoshlist('<%=productData.productId%>')"><i class="lnr lnr lnr-heart"></i></button>
+								<%}%>
+							</div>
+							<% }else { %>
+						<div class="card_area d-flex align-items-center">
+							<% if(productData.bannerId){ %>
+								<button onclick="AddbannerToCart('<%=productData.bannerId%>')" class="btn primary-btn" >Add to Cart</button>
+								<button class="icon_btn " onclick="addBannerProductTowoshlist('<%=productData.bannerId%>')"><i class="lnr lnr lnr-heart"></i></button>
+							<% }else{ %>
+								<button onclick="AddToCart('<%=productData.productId%>')" class="btn primary-btn" >Add to Cart</button>
+								<button class="icon_btn " onclick="addTowoshlist('<%=productData.productId%>')"><i class="lnr lnr lnr-heart"></i></button>
+							<% } %>
+						</div>
+						<% } %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div >
+	<script src="https://example.com/img/zoomsl.min.js" type="text/javascript"></script>
+	<script src="/js/zoomsl.js"></script>
+	<script src="/js/product_details.js"></script>
+	<script src="/js/cart_page.js"></script>
+
+	<%-include('../../layouts/user/footer.ejs')%>
+</body>
+
+</html>

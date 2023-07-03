@@ -1,0 +1,161 @@
+<%-include('../../layouts/user/header.ejs')%>
+    <%-include('../../layouts/user/nav_bar.ejs')%>
+
+	<!--================Order Details Area =================-->
+	<section class="order_details section_gap" style="margin-top: 10%;">
+		<div class="container">
+
+		  <h3 class="title_confirmation">Thank you. Your order has been received.</h3>
+		  <div class="row order_d_inner">
+			<div class="col-lg-4">
+			  <div class="details_item">
+				<h4>Order Info</h4>
+				<ul class="list">
+				  <li><span>Order number</span>: <%= orderData.orderId %></li>
+				  <li><span>Date</span>: <%= orderData.date.toLocaleDateString() %></li>
+				  <li><span>Total</span>: <%= orderData.total %></li>
+				  <% if (orderData.paymentType == 'cod'){ %>
+					<li><span>Payment method</span>: Cash On delivery </li>
+				<% }else{%>
+					<li><span>Payment method</span>: <%= orderData.paymentType %></li>
+				<% }%>
+				</ul>
+			  </div>
+			</div>
+	  
+			<div class="col-lg-4">
+			  <div class="details_item">
+				<h4>Billing Address</h4>
+				<ul class="list">
+				  <li><span>Name</span>: <%= orderData.deliveryAddress[0].name %></li>
+				  <li><span>Housename</span>: <%= orderData.deliveryAddress[0].housename %></li>
+				  <li><span>Street</span>: <%= orderData.deliveryAddress[0].street %></li>
+				  <li><span>District</span>: <%= orderData.deliveryAddress[0].district %></li>
+				  <li><span>State</span>: <%= orderData.deliveryAddress[0].state %></li>
+				  <li><span>Pincode</span>: <%= orderData.deliveryAddress[0].pincode %></li>
+				  <li><span>Country</span>: <%= orderData.deliveryAddress[0].country %></li>
+				  <li><span>Phone</span>: <%= orderData.deliveryAddress[0].phone %></li>
+				</ul>
+			  </div>
+			</div>
+			<div class="col-lg-4">
+			  <div class="details_item">
+				<h4>Shipping Address</h4>
+				<ul class="list">
+				  <li><span>Street</span>: <%= orderData.deliveryAddress[0].street %></li>
+				  <li><span>City</span>: <%= orderData.deliveryAddress[0].city %></li>
+				  <li><span>Country</span>: <%= orderData.deliveryAddress[0].country %></li>
+				  <li><span>Postcode</span>: <%= orderData.deliveryAddress[0].pincode %></li>
+				</ul>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	<div class="text-center">
+		<a class="gray_btn" href="/">Continue Shopping</a>
+	</div>
+	  <!-- </section> -->
+
+			
+			<div class="order_details_table">
+				<h2>Order Details</h2>
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">Product</th>
+								<th scope="col">Quantity</th>
+								<th scope="col">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% if (products.length > 0) { %>
+								<% products.forEach((item)=>{ %>
+							<tr>
+
+									<td>
+									<p><%=item.productId.name%></p>
+								</td>
+								<td><p><%= item.quantity%></p></td>
+								<% let proOfferMatch = productOffer.find((x) => x.product_name.equals(item.productId.productId)); %>
+								<% let offerMatch = offers.find((x) => x.category.categoryId.equals( item.productId.category )); %>
+								<% if (proOfferMatch && offerMatch) { %>
+									<td><p>₹<%= (item.singlePrice * item.quantity) - (((item.singlePrice * item.quantity) * (offerMatch.discountPercentage + proOfferMatch.discountPercentage))/ 100).toFixed(2) %></p></td>
+ 									<% } else if (proOfferMatch && !offerMatch) { %>
+										<td><p>₹<%= (item.singlePrice * item.quantity) - (((item.singlePrice * item.quantity) * (proOfferMatch.discountPercentage))/ 100).toFixed(2) %></p></td>
+									<% } else if (offerMatch && !proOfferMatch) { %>
+										<td><p>₹<%= (item.singlePrice * item.quantity) - (((item.singlePrice * item.quantity) * (offerMatch.discountPercentage ))/ 100).toFixed(2) %></p></td>
+									<% } else { %>
+										<td><p>₹<%= (item.singlePrice * item.quantity).toFixed(2) %><td><p>
+									  <% } %>
+							</tr>
+	
+								<% })%>
+								<% } %>
+
+							<% if (banners.length > 0) { %>
+								<% banners.forEach((item)=>{ %>
+								<tr>
+									<td><p><%=item.bannerId.name%></p></td>
+								<td><p><%= item.quantity%></p></td>
+								<% let proOfferMatch = productOffer.find((x) => x.product_name.equals(item.bannerId.bannerId)); %>
+								<% let offerMatch = offers.find((x) => x.category.categoryId.equals(item.bannerId.category)); %>
+								<% if (proOfferMatch && offerMatch) { %>
+									<td><p>₹<%= (item.singlePrice * item.quantity) - (((item.singlePrice * item.quantity) * (offerMatch.discountPercentage + proOfferMatch.discountPercentage))/ 100).toFixed(2) %></p></td>
+									<% } else if (proOfferMatch && !offerMatch) { %>
+										<td><p>₹<%= (item.singlePrice * item.quantity) - (((item.singlePrice * item.quantity) * (proOfferMatch.discountPercentage))/ 100).toFixed(2) %></p></td>
+									<% } else if (offerMatch && !proOfferMatch) { %>
+										<td><p>₹<%= (item.singlePrice * item.quantity) - (((item.singlePrice * item.quantity) * (offerMatch.discountPercentage ))/ 100).toFixed(2) %></p></td>
+									<% } else { %>
+										<td><p>₹<%= (item.singlePrice * item.quantity).toFixed(2) %><td><p>
+									  <% } %>
+							</tr>
+
+								<% })%>
+								<% } %>
+							
+							<tr>
+							  <td>
+								<h4>Subtotal</h4>
+							  </td>
+							  <td>
+								<h5></h5>
+							  </td>
+							  <td>
+								<p>₹ <%= orderData.total %>.00</p>
+							  </td>
+							</tr>
+							<!-- <tr>
+							  <td>
+								<h4>Shipping</h4>
+							  </td>
+							  <td>
+								<h5></h5>
+							  </td>
+							  <td>
+								<p>Flat rate: $50.00</p>
+							  </td>
+							</tr> -->
+							<tr>
+							  <td>
+								<h4>Total</h4>
+							  </td>
+							  <td>
+								<h5></h5>
+							  </td>
+							  <td>
+								<p class="text-success">₹ <%= orderData.total %>.00</p>
+							  </td>
+							</tr>
+						  </tbody>
+						  
+						  
+					</table>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--================End Order Details Area =================-->
+
+	<!-- start footer Area -->
+	<%-include('../../layouts/user/footer.ejs')%>

@@ -1,0 +1,83 @@
+<%- include('../../layouts/admin/header.ejs') %>
+<div id="content-wrapper" class="d-flex flex-column mb-5">
+
+  <!-- Main Content -->
+  <div id="content">
+
+      <!-- Topbar -->
+  <%-include('../../layouts/admin/nav.ejs')%>
+
+  <div class="container">
+    <h1>Add Category Offer</h1>
+    <form id="addOfferForm" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" class="form-control" required>
+      </div>
+  
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" class="form-control" required></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <select id="category" name="category" class="form-control" required>
+          <% categories.forEach((category) => { %>
+            <option value="<%= category.categoryId %>"><%= category.categoryName %></option>
+          <% }) %>
+        </select>
+      </div>
+  
+      <div class="form-group">
+        <label for="discountPercentage">Discount Percentage( % ):</label>
+        <input type="number" id="discountPercentage" name="discountPercentage" class="form-control" required>
+      </div>
+  
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" class="form-control" required>
+      </div>
+  
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" class="form-control" required>
+      </div>
+  
+      <button onclick="addOffer()" type="button" class="btn btn-primary">Add Offer</button>
+    </form>
+  </div>
+
+  </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script>
+    function addOffer() {
+      // Gather form data
+
+      var formData = $('#addOfferForm').serialize();
+      console.log(formData);
+
+        if (formData.discountPercentage < 0 || formData.discountPercentage > 100 ){
+            swal("Wrong discount percentage selected!");
+            return;
+        }
+
+        $.ajax({
+            url:'/admin/dashboard/add_offer',
+            method: 'post',
+            data:formData,
+            success:(response)=>{
+                console.log(response);
+                if(response.error){
+                    swal(response.error);
+                }else{
+                    swal("Offer Added", "Congratulations! The Offer has been successfully added.", "success");
+                    window.location.href = '/admin/dashboard/offer_managemnet';
+                }
+            }
+        })
+    }
+  </script>

@@ -1,0 +1,79 @@
+<%- include('../../layouts/admin/header.ejs') %>
+
+  <div class="container">
+    <h1>Coupon Management</h1>
+    <a href="/admin/dashboard/coupon/add_coupon"><button class="btn btn-primary">Add Coupon</button></a>
+      
+     
+    <table class="table mt-5">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Coupon Name</th>
+        <th>Expiry Date</th>
+        <th>Discount</th>
+        <th>Minimum Price</th>
+        <th>Quantity</th>
+        <th>Status</th>
+        <th>action</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    <% if (data.length > 0){ %>
+        <% data.forEach((item, index)=>{ %>
+            <tr>
+                <td><%= index + 1%></td>
+                <td><%=item.couponName %></td>
+                <td><%=item.expiryDate.toLocaleDateString() %></td>
+                <td><%=item.discount %></td>
+                <td><%=item.minimumPrice %></td>
+                <td><%=item.quantity %></td>
+                <td><%=item.status %></td>
+                <td><a href="/admin/dashboard/coupon/edit_coupon/<%=item._id%>">edit</a></td>
+            </tr>
+        <% }) %>
+    <% }else{ %>
+        <tr>
+            <td>
+        <p>Empty!</p>
+            </td>
+    </tr>
+    <% } %>
+    </tbody>
+    </table>
+  </div>
+
+
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('#couponForm').submit(function(event) {
+        event.preventDefault(); // Prevent default form submission
+  
+        var formData = $(this).serialize();
+  
+        // $.ajax({
+        //   type: 'POST',
+        //   url: $(this).attr('action'),
+        //   data: formData,
+        //   success: function(response) {
+        //     if (response.response =='Coupon Added'){
+        //         $('.coupon-form').load('/cart .coupon-form');
+        //     }
+        //     console.log('Coupon created successfully:', response.response);
+        //     swal({
+        //         text: `${response.response}`,
+        //     });
+        //     }
+        // });
+      });
+    });
+  </script>
+  <%- include('../../layouts/admin/footer.ejs') %>

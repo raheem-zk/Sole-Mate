@@ -1,0 +1,63 @@
+<%- include('../../layouts/admin/header.ejs') %>
+<div id="content-wrapper" class="d-flex flex-column">
+
+  <!-- Main Content -->
+  <div id="content">
+
+      <!-- Topbar -->
+  <%-include('../../layouts/admin/nav.ejs')%>
+
+
+  <div class="container">
+    <h1>Category Offer Management</h1>
+    <a href="/admin/dashboard/add_offer" class="btn btn-primary mb-3">Add New Category Offer</a>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Discount Percentage</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(offers.length > 0){ %>
+            <% offers.forEach((offer) => { %>
+                <tr>
+                  <td><%= offer.title %></td>
+                  <td><%= offer.description %></td>
+                  <td><%= offer.category.categoryName %></td>
+                  <td><%= offer.discountPercentage %>%</td>
+                  <td><%= offer.startDate.toDateString() %></td>
+                  <td><%= offer.endDate.toDateString() %></td>
+                  <% if (offer.status =='Active'){ %>
+                    <td class="text-success"><%= offer.status %></td>
+                  <% } else{ %>
+                    <td><%= offer.status %></td>
+                  <% } %>
+                  <td>
+                    <a href="/admin/dashboard/edit/<%= offer._id %>" class="btn btn-primary btn-sm">Edit</a>
+                  </td>
+                </tr>
+              <% }) %>
+        <% }else{ %>
+            <tr>
+                <td><p>Emty</p></td>
+            </tr>
+        <% } %>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>

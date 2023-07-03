@@ -1,0 +1,194 @@
+
+<%-include('../../layouts/user/header.ejs')%>
+<%-include('../../layouts/user/nav_bar.ejs')%>
+    <!-- Start Header Area -->
+	
+    <!--================Cart Area =================-->
+    <section class="cart_area  pt-5">
+        <div class="container pt-5">
+            <div class="cart_inner pt-5">
+                <div class="table-responsive pt-5">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Remove</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (cart.length > 0) { %>
+                                <% cart.forEach((item) => { %>
+                                  <% if (item.product){ %>
+                                    <tr class="rowToRemove<%=item.product.productId%>">
+                                      <td>
+                                        <div class="media">
+                                          <div class="d-flex">
+                                            <img src="/proImages/<%= item.product.images[0] %>" height="130px" alt="">
+                                          </div>
+                                          <div class="media-body">
+                                            <p><%= item.product.description %></p>
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <% let proOfferMatch = productOffer.find((x) => x.product_name.equals(item.product.productId)); %>
+                                        <% let offerMatch = offers.find((x) => x.category.categoryId.equals(item.product.category)); %>
+                                        
+                                        <% if (proOfferMatch && offerMatch) { %>
+                                          <h5>₹<%= (item.product.price - (item.product.price * (offerMatch.discountPercentage + proOfferMatch.discountPercentage) / 100)).toFixed(2) %></h5>
+                                          <h5 class="l-through"><s>₹<%= item.product.price.toFixed(2) %></s></h5> 
+                                          <span class="text-success"><%= offerMatch.discountPercentage + proOfferMatch.discountPercentage %>% off</span>
+                                        <% } else if (proOfferMatch && !offerMatch) { %>
+                                          <h5>₹<%= (item.product.price - (item.product.price * proOfferMatch.discountPercentage / 100)).toFixed(2) %></h5>
+                                          <h5 class="l-through"><s>₹<%= item.product.price.toFixed(2) %></s></h5> 
+                                          <span class="text-success"><%= proOfferMatch.discountPercentage %>% off</span>
+                                        <% } else if (offerMatch && !proOfferMatch) { %>
+                                          <h5>₹<%= (item.product.price - (item.product.price * offerMatch.discountPercentage / 100)).toFixed(2) %></h5>
+                                          <h5 class="l-through"><s>₹<%= item.product.price.toFixed(2) %></s></h5> 
+                                          <span class="text-success"><%= offerMatch.discountPercentage %>% off</span>
+                                        <% } else { %>
+                                          <h6>₹<%= item.product.price %>.00</h6>
+                                        <% } %>
+                                        
+                                      </td>
+                                      <td>
+                                        <div class="input-group-<%=item.product.productId%>" style="width: 170px";>
+                                          <button onclick="productquantity('<%=item.product.productId%>',-1,'<%= item.quantity%>','<%=item.product.stock %>')" class="btn btn-light">-</button>
+                                          <input style="width: 50px;" type="number" aria-label="Quantity" id="quantity-input<%=item.product.productId%>" min="1" value="<%=item.quantity %>" max="<%=item.product.stock%>" disabled/>
+                                          <button onclick="productquantity('<%=item.product.productId%>',1,'<%= item.quantity%>','<%=item.product.stock %>')" class="btn btn-light">+</button>
+                                        </div>
+                                      </td>
+                                      <td>
+                                          <button onclick="removeCartItem('<%=item.product.productId%>')" type="button"  class="btn btn-light"><i class="bi bi-trash"></i></button>
+                                        </td>
+                                      <!-- <td><button class=""><i class="bi bi-trash"></i></button></td> -->
+                                      <td>
+                                        <!-- <h5>$<%= item.quantity * item.product.price %>.00</h5> -->
+                                      </td>
+                                    </tr>
+                                  <%} else if (item.bannerproduct){ %>
+                                    <tr class="rowToRemove<%=item.bannerproduct.bannerId%>">
+                                      <td>
+                                        <div class="media">
+                                          <div class="d-flex">
+                                            <img src="/proImages/<%= item.bannerproduct.images[0] %>" height="130px" alt="">
+                                          </div>
+                                          <div class="media-body">
+                                            <p><%= item.bannerproduct.description %></p>
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <% let proOfferMatch = productOffer.find((x) => x.product_name.equals(item.bannerproduct.bannerId)); %>
+                                        <% let offerMatch = offers.find((x) => x.category.categoryId.equals(item.bannerproduct.category)); %>
+                                        
+                                        <% if (proOfferMatch && offerMatch) { %>
+                                          <h5>₹<%= (item.bannerproduct.price - (item.bannerproduct.price * (offerMatch.discountPercentage + proOfferMatch.discountPercentage) / 100)).toFixed(2) %></h5>
+                                          <h5 class="l-through"><s>₹<%= item.bannerproduct.price.toFixed(2) %></s></h5> 
+                                          <span class="text-success"><%= offerMatch.discountPercentage + proOfferMatch.discountPercentage %>% off</span>
+                                        <% } else if (proOfferMatch && !offerMatch) { %>
+                                          <h5>₹<%= (item.bannerproduct.price - (item.bannerproduct.price * proOfferMatch.discountPercentage / 100)).toFixed(2) %></h5>
+                                          <h5 class="l-through"><s>₹<%= item.bannerproduct.price.toFixed(2) %></s></h5> 
+                                          <span class="text-success"><%= proOfferMatch.discountPercentage %>% off</span>
+                                        <% } else if (offerMatch && !proOfferMatch) { %>
+                                          <h5>₹<%= (item.bannerproduct.price - (item.bannerproduct.price * offerMatch.discountPercentage / 100)).toFixed(2) %></h5>
+                                          <h5 class="l-through"><s>₹<%= item.bannerproduct.price.toFixed(2) %></s></h5> 
+                                          <span class="text-success"><%= offerMatch.discountPercentage %>% off</span>
+                                        <% } else { %>
+                                          <h6>₹<%= item.bannerproduct.price %>.00</h6>
+                                        <% } %>
+                                        
+       
+                                      </td>
+                                      <td>
+                                          <div class="input-group-<%=item.bannerproduct.bannerId%>" style="width: 170px";>
+                                            <button onclick="quantity('<%=item.bannerproduct.bannerId%>',-1,'<%= item.quantity%>','<%=item.bannerproduct.stock %>')" class="btn btn-light">-</button>
+                                            <input style="width: 50px;" type="number" aria-label="Quantity" id="quantity-input<%=item.bannerproduct.bannerId%>" min="1" value="<%=item.quantity %>" max="<%=item.bannerproduct.stock%>" disabled/>
+                                            <button onclick="quantity('<%=item.bannerproduct.bannerId%>',1, '<%= item.quantity%>','<%=item.bannerproduct.stock %>')" class="btn btn-light">+</button>
+                                          </div>
+                                        
+                                      </td>
+                                      <td>
+                                          <button onclick="removebanerCartItem('<%=item.bannerproduct.bannerId%>')" type="button"  class="btn btn-light"><i class="bi bi-trash"></i></button>
+                                        </td>
+                                      <!-- <td><button class=""><i class="bi bi-trash"></i></button></td> -->
+                                      <td>
+                                      </td>
+                                    </tr>
+                                  <% } %>
+                                  
+                                <% }) %>
+                                <tr>
+                                    <td>
+    
+                                    </td>
+                                    <td>
+    
+                                    </td>
+                                    <td>
+                                        <h5>Subtotal</h5>
+                                    </td>
+                                    <td>
+                                      <div class="totalProce">
+                                        <h5 id="total">₹<%= cartTotalPrice.toFixed(2) %></h5>
+                                      </div>
+                                    </td>
+                                </tr>
+                                <tr class="out_button_area">
+                                    <td>
+    
+                                    </td>
+                                    <td>
+    
+                                    </td>
+                                    <td>
+    
+                                    </td>
+                                    <td>
+                                        <div class="checkout_btn_inner d-flex align-items-center">
+                                            <a class="gray_btn" href="/">Continue Shopping</a>
+                                            <a class="primary-btn" href="/cart/checkout">Proceed to checkout</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                              <% } else { %>
+                                <div class="zero">
+                                  <%if (cart.length == 0){ %>
+                                    <tr >
+                                    <td colspan="4">Empty!</td>
+                                  </tr>
+                                  <tr class="out_button_area">
+                                      <td>
+      
+                                      </td>
+                                      <td>
+      
+                                      </td>
+                                      <td>
+      
+                                      </td>
+                                      <td>
+                                          <div class="checkout_btn_inner d-flex align-items-center">
+                                              <a class="gray_btn" href="/">Continue Shopping</a>
+                                          </div>
+                                      </td>
+                                  </tr>
+                                  <% } %>
+                                </div>
+                              <% } %>
+                            </div>
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Cart Area =================-->
+
+    <script src="/js/cart_page.js"></script>
+
+    <%-include('../../layouts/user/footer.ejs')%>

@@ -1,0 +1,46 @@
+<%-include('../../layouts/user/header.ejs')%>
+<%-include('../../layouts/user/nav_bar.ejs')%>
+
+
+
+  <div class="container pb-5" style="padding-top: 10%;">
+    <a href="/profile/manage-address/add-address"><button type="button" class="btn btn-outline-success">Add Address</button></a>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th> No</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>acctions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (data.length > 0) { %>
+            <% data.forEach((item, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= item.name %></td>
+                <td><%= item.housename %>, <%= item.street %>, <%= item.district %>, <%= item.state %>, <%= item.pincode %>, <%= item.country %>, <%= item.phone %></td>
+                <td>
+                    <div class="d-flex">
+                      <a href="/profile/manage-address/edit/<%=item._id%>"><button type="button" class="btn btn-outline-success m-2">Edit</button></a>
+                      <a href="/profile/manage-address/remove/<%= item._id%>"><button type="button" class="btn btn-outline-danger m-2">Delete</button></a>
+                    </div>
+                  </td>
+                  
+              </tr>
+            <% }) %>
+          <% }else{ %>
+            <tr>
+            <td><p class="text-danger">Empty!</p></td>
+          </tr>
+          <% } %>
+        </tr>
+        <!-- Add more rows as needed -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Bootstrap JS -->
+  <%-include('../../layouts/user/footer.ejs')%>

@@ -1,0 +1,133 @@
+<%-include('../layouts/user/header.ejs')%>
+
+<section class="login_box_area section_gap">
+  <div class="container">
+    <div class="row justify-content-center"> <!-- Added 'justify-content-center' class to center the content -->
+      <div class="col-lg-6">
+        <div class="login_form_inner" style="display: block;">
+          <h3 class="text-center">Login</h3> <!-- Added 'text-center' class to center the heading -->
+          <p>Get access to your <br> Orders, Wishlist and <br> Recommendations</p>
+          <div class="row login_form" id="contactForm" novalidate="novalidate">
+            <div class="col-md-12 form-group">
+              <input required type="number" name="mobile" class="form-control text-center" id="mobileNumber" placeholder="Mobile Number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile Number'">
+            </div>
+            <div class="col-md-12 form-group">
+              <button type="button" onclick="login_with_number()" class=" primary-btn ">Log In</button> 
+            </div>
+          </div>
+        </div>
+        <div class="otp_form_inner" style="display: none;">
+          <h3 class="text-center">Login</h3>
+          <h6 class="text-danger text-center">Please enter the one time password <br> to verify your account</h6>
+          <div class="text-center"> <span>A code has been sent to +91</span> <small id="userMobilenumber"> XXXXXXXXXX</small> </div>
+
+          <div class="row login_form" id="contactForm" novalidate="novalidate">
+            <div class="col-md-12 form-group">
+              <input required type="number" name="otp" maxlength="6" class="form-control text-center" id="otpCode" placeholder="X X X X X X">
+            </div>
+            <div class="col-md-12 form-group">
+              <button type="button" onclick="otp_verify()" class="primary-btn">Validate</button>
+            </div>
+          </div>
+        </div>
+        
+        
+        <div class="container height-100 d-flex justify-content-center align-items-center m-5" style="display: block;">
+      </div>
+      
+      </div>
+    </div>
+  </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+  
+<%-include('../layouts/user/footer.ejs')%>
+
+<script>
+
+  function login_with_number() {
+  var phoneNumber = $("#mobileNumber").val();
+  if (phoneNumber.length != 10) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Number is incorrect!'
+    });
+    return;
+  }
+  $.ajax({
+    url: '/login_with_number',
+    method: 'post',
+    data: { number: phoneNumber },
+    success: function(response) {
+      console.log(response.response.error);
+      if (response.response.error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: "User not found"
+        });
+      } else if (response.response.success) {
+        $(".login_form_inner").remove();
+        $(".otp_form_inner").css("display", "block");
+        // Update the mobile number in the OTP form
+        $("#userMobilenumber").text(phoneNumber);
+      }
+    }
+  });
+}
+
+function otp_verify(){
+  var otp = $("#otpCode").val();
+  var number = $("#userMobilenumber").text();
+  console.log(otp, number)
+  if(otp.length != 6){
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Invalid OTP'
+    });
+  }
+  $.ajax({
+    url:'/login_with_number_otp',
+    method:'post',
+    data:{otp: otp, number: number},
+    success:(response)=>{
+      if(response.response.success){
+        window.location.href = "/";
+      }else if (response.response.error){
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Invalid OTP'
+        });
+      }
+    }
+  })
+}
+
+  // function login_with_number(){
+  //   var phoneNumber = $("#mobileNumber").val();
+  //   if(phoneNumber.length !=10){
+  //     sweetAlert("Oops...", "Number is incurect!", "error");
+  //     return;
+  //   }
+  //   $.ajax({
+  //     url:'/login_with_number',
+  //     method:'post',
+  //     data: {number:phoneNumber},
+  //     success:(response)=>{
+  //       console.log(response)
+  //       if(response.error){
+  //         sweetAlert("Oops...", + response.error+"", "error");
+  //         return;
+  //       } else if (response.success){
+  //         $(".login_form_inner").remove();
+  //         $(".otp_form_inner").css("display", "block");
+  //         // Update the mobile number in the OTP form
+  //         $(".otp_form_inner small").text(`+91 ${response.mobile}`);
+  //       }
+  //     }
+  //   })
+  // }
+</script>

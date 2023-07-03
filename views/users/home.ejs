@@ -1,0 +1,315 @@
+
+	<%-include('../layouts/user/header.ejs')%>
+	<%-include('../layouts/user/nav_bar.ejs')%>
+	
+	<section>
+  <!-- Carousel Wrapper -->
+  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-bs-target="#carouselExample" data-bs-slide-to="0" class="active"></li>
+      <li data-bs-target="#carouselExample" data-bs-slide-to="1"></li>
+      <li data-bs-target="#carouselExample" data-bs-slide-to="2"></li>
+    </ol>
+
+    <!-- Slides -->
+    <div class="carousel-inner">
+
+		<% for (let i = 0; i < Math.min(banner.length, 3); i++) { %>
+		  <div class="carousel-item <%= i === 0 ? 'active' : '' %>" style="height: 90%;">
+			<div class="row single-slide align-items-center d-flex">
+			  <div class="col-lg-5 p-5">
+				<div class="banner-content p-5">
+				  <h1><%=banner[i].brand%> New <br>Collection!</h1>
+				  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+					dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+				  <div class="add-bag col-md-10 d-flex align-items-center ml-5">
+					<span class="add-text text-uppercase">Add to Cart</span>
+					<% if (banner[i].stock !=0){ %>
+						<a class=" add-btn ml-5" href="#" onclick="AddbannerToCart('<%=banner[i].bannerId%>')" ><span class="lnr lnr-cross"></span></a>
+					<% } else{ %>
+						<a class=" add-btn ml-5" href="#"><span class="lnr lnr-cross"></span></a>
+					<% } %>
+				  </div>
+				</div>
+			  </div>
+			  <div class="col-lg-7">
+				<div class="banner-img">
+				  <img src="/proImages/<%= banner[i].images[0] %>" class="d-block img" alt="Slide">
+				</div>
+			  </div>
+			</div>
+			<div class="carousel-caption d-none d-md-block">
+			  <a href="/banner-product-detail/<%= banner[i].bannerId %>"><h2 class="text-center text-success">More Detail</h2></a>
+			</div>
+		  </div>
+		<% } %>
+	  
+	  </div>
+	  
+
+    <!-- Controls -->
+    <a class="carousel-control-prev" href="#carouselExample" role="button" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExample" role="button" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </a>
+  </div>
+</section>
+
+	  
+		  
+	  
+	<!-- End banner Area -->
+
+	<!-- start features Area -->
+	<section class="features-area section_gap">
+		<div class="container">
+			<div class="row features-inner">
+				<!-- single features -->
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="single-features">
+						<div class="f-icon">
+							<img src="img/features/f-icon1.png" alt="">
+						</div>
+						<h6>Free Delivery</h6>
+						<p>Free Shipping on all order</p>
+					</div>
+				</div>
+				<!-- single features -->
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="single-features">
+						<div class="f-icon">
+							<img src="img/features/f-icon2.png" alt="">
+						</div>
+						<h6>Return Policy</h6>
+						<p>Free Shipping on all order</p>
+					</div>
+				</div>
+				<!-- single features -->
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="single-features">
+						<div class="f-icon">
+							<img src="img/features/f-icon3.png" alt="">
+						</div>
+						<h6>24/7 Support</h6>
+						<p>Free Shipping on all order</p>
+					</div>
+				</div>
+				<!-- single features -->
+				<div class="col-lg-3 col-md-6 col-sm-6">
+					<div class="single-features">
+						<div class="f-icon">
+							<img src="img/features/f-icon4.png" alt="">
+						</div>
+						<h6>Secure Payment</h6>
+						<p>Free Shipping on all order</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end features Area -->
+
+	<section>
+		<% if (coupon.length > 0) { %>
+		  <div id="discount-carousel-coupon" class="carousel slide" data-ride="carousel" data-interval="5000">
+			<div class="carousel-inner">
+			  <% coupon.forEach((item, index) => { %>
+				<% if (index < 3) { %>
+				  <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+					<div class="discount-card">
+					  <img class="card-img-top" src="/img/coupon_img/<%= index + 1 %>.jpg" alt="Discount Offer Image">
+					  <div class="carousel-caption d-none d-md-block text-left">
+						<div class="rounded-circle w-25 h-100">
+						  <h5 class="card-title display-4 text-success">SAVE <%= item.discount %>% !</h5>
+						</div>
+						<h5 class="card-title display-4">Exclusive Discount</h5>
+						<h6>Coupon Code: <%= item.couponName %></h6>
+						<p class="card-text text-primary">Save <%= item.discount %> % on your purchase of ₹ <%= item.minimumPrice %> or more. Expires on <%= item.expiryDate.toLocaleDateString() %>.</p>
+					  </div>
+					</div>
+				  </div>
+				<% } %>
+			  <% }) %>
+			</div>
+			<a class="carousel-control-prev" href="#discount-carousel-coupon" role="button" data-slide="prev">
+			  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			  <span class="sr-only">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#discount-carousel-coupon" role="button" data-slide="next">
+			  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			  <span class="sr-only">Next</span>
+			</a>
+		  </div>
+		<% } %>
+	  </section>
+	  
+	  <section>
+		<style>
+		  .offer-banner {
+			/* position: relative; */
+			height: 250px;
+		  }
+	  
+		  .offer-banner img {
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+		  }
+	  
+		  .offer-banner-content {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			/* color: #ffffff; */
+		  }
+	  
+		  .offer-banner-content h1 {
+			font-size: 3rem;
+			font-weight: bold;
+			margin-bottom: 0;
+		  }
+	  
+		  .offer-banner-content p {
+			font-size: 1.5rem;
+			margin-bottom: 2rem;
+		  }
+		</style>
+	  
+		<% if (offers && offers.length > 0) { %>
+		  <div id="discount-carousel-offer" class="carousel slide mt-3" data-ride="carousel" data-interval="5000">
+			<div class="carousel-inner">
+			  <% offers.slice(0, 3).forEach((offer, index) => { %>
+				<div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+				  <div class="offer-banner">
+					<img class="card-img-top" src="/img/offer_image/offer_imag.webp" alt="Discount Offer Image">
+					<div class="offer-banner-content">
+					  <h1><%= offer.discountPercentage %>% OFF</h1>
+					  <h5 class="card-title display-4"><%= offer.title %></h5>
+					  <p class="banner">Discover our irresistible offers on <span class="text-success"><%= offer.category.categoryName %></span> Shoes!</p>
+					  <p class="offer-details">Limited time offer on <%= offer.category.categoryName %> Shoe collection</p>
+					</div>
+				  </div>
+				</div>
+			  <% }) %>
+			</div>
+			<a class="carousel-control-prev" href="#discount-carousel-offer" role="button" data-slide="prev">
+			  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			  <span class="sr-only">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#discount-carousel-offer" role="button" data-slide="next">
+			  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			  <span class="sr-only">Next</span>
+			</a>
+		  </div>
+		<% } %>
+	  </section>
+	  
+
+	
+  <section style="background-color: #ffffff;">
+	<div class="container py-5">
+	  <header class="mb-4">
+		<h4 class="text-center mt-4 mb-5"><strong>Bestsellers</strong></h4>
+	  </header>
+  
+	  <div class="row">
+		<% if (products.length > 0) { %>
+		  <% products.forEach((item) => { %>
+			<div class="col-lg-3 col-md-6">
+			  <div class="single-product">
+				<img class="img-fluid product-image" src="/proImages/<%= item.images[0] %>" alt="Product Image">
+				<div class="product-details" style="height: 140px; position: relative;">
+				  <h6 class="product-name overflow-hidden"><%= item.name %></h6>
+				  <div class="price">
+
+					<% let proOfferMatch = productOffer.find((x)=> x.product_name.equals(item.productId)); %>
+					<% let offerMatch = offers.find((x) => x.category.categoryId.equals(item.category)); %>
+					<% if(proOfferMatch && offerMatch){ %>
+
+						<h6>₹<%= item.price - ((item.price* (offerMatch.discountPercentage + proOfferMatch.discountPercentage ))/100).toFixed(2)  %></h6>
+						<h6 class="l-through">₹ <%= item.price.toFixed(2) %></h6> 
+						<span class="text-success"><%=offerMatch.discountPercentage + proOfferMatch.discountPercentage %>% off</span>
+					
+					<% } else if (proOfferMatch && !offerMatch){%>
+						<h6>₹<%= item.price - ((item.price* proOfferMatch.discountPercentage)/100).toFixed(2)   %></h6>
+						<h6 class="l-through">₹ <%= item.price.toFixed(2) %></h6> 
+						<span class="text-success"><%=proOfferMatch.discountPercentage %>% off</span>
+
+					<% } else if (offerMatch && !proOfferMatch) {%>
+						<h6>₹<%= item.price -((item.price* offerMatch.discountPercentage)/100).toFixed(2)   %></h6>
+						<h6 class="l-through">₹ <%= item.price.toFixed(2)  %></h6> 
+						<span class="text-success"><%=offerMatch.discountPercentage %>% off</span>
+					<% } else {%>
+						<h6>₹<%= item.price.toFixed(2)  %> </h6>
+					<% }%>
+
+				  </div>
+				  <div class="prd-bottom" style="position: absolute; bottom: 0;">
+					<% if(item.stock !== 0){ %>
+						<a class="social-info" onclick="AddToCart('<%= item.productId %>')">
+							<span class="ti-bag"></span>
+							<p class="hover-text">Add to Cart</p>
+						  </a>
+					<% } else { %>
+						<a class="social-info">
+							<span class="ti-bag"></span>
+							<p class="hover-text">Add to Cart</p>
+						  </a>
+					<% } %>
+
+					
+					<a onclick="addTowoshlist('<%= item.productId %>')" class="social-info">
+					  <span class="lnr lnr-heart"></span>
+					  <p class="hover-text">Wishlist</p>
+					</a>
+					<a href="/product-detail/<%= item.productId %>" class="social-info">
+					  <span class="lnr lnr-move"></span>
+					  <p class="hover-text">View More</p>
+					</a>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		  <% }) %>
+		<% } %>
+	  </div>
+	</div>
+</section>
+<style>
+	.single-product img {
+		margin-bottom: 20px;
+		width: 100%;
+		height: 260px;
+	}
+</style>
+
+    
+
+	
+	
+  <!-- Products -->
+  
+  <!-- Feature -->
+  
+	  
+	<!-- end product Area -->
+
+
+	  
+	  
+
+	<!-- Start brand Area -->
+
+
+	  
+	  
+	  
+	  
+	<%-include('../layouts/user/footer.ejs')%>

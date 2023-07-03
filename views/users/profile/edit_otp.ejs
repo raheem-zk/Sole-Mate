@@ -1,0 +1,26 @@
+<%-include('../../layouts/user/header.ejs')%>
+
+
+<div class="container height-100 d-flex justify-content-center align-items-center m-5">
+    <div class="position-relative m-5">
+        <div class="card p-2 text-center m-3">
+            <form action="/profile/edit/otp" method="post">
+            <h6 class="text-danger">Please enter the one time password <br> to verify your account</h6>
+            <div> <span>A code has been sent to</span> <small>+91 <%=data.mobileNumber%></small> </div>
+
+                    <input type="hidden" name="name" value="<%=data.name%>">
+                    <input type="hidden" name="mobileNumber" value="<%=data.mobileNumber%>">
+                    <input type="hidden" name="data.email" value="<%=data.email%>">
+                    <% if (data.newPassword){ %>
+                    <input type="hidden" name="newPassword" value="<%=data.newPassword%>">
+                    <% } %>
+                    <input class="m-2 text-center form-control rounded" id="sixth" type="number" name="otp" maxlength="6">
+            <div class="mt-4"> <button type="submit" class="btn btn-danger px-4 validate ">Validate</button> </div>
+        </form>
+        </div>
+
+    </div>
+</div>
+
+
+<%-include('../../layouts/user/footer.ejs')%>

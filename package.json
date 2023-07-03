@@ -1,0 +1,32 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.20.2",
+    "chart.js": "^4.3.0",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mongodb": "^5.6.0",
+    "mongoose": "^7.2.2",
+    "multer": "^1.4.5-lts.1",
+    "nanoid": "^4.0.2",
+    "nocache": "^4.0.0",
+    "razorpay": "^2.9.0",
+    "referral-codes": "^2.0.3",
+    "sharp": "^0.32.1",
+    "twilio": "^4.11.2",
+    "uuid": "^9.0.0"
+  }
+}

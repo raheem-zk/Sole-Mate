@@ -1,0 +1,51 @@
+<%- include('../../layouts/admin/header.ejs') %>
+
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+        <!-- Topbar -->
+        <%-include('../../layouts/admin/nav.ejs')%>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Sales</h1>
+            </div>
+
+            <section class="section dashboard">
+                <div class="row">
+                    <div class="card br-8px">
+                        <div class="card-body">
+                            <br>
+                            <!-- Vertical Form -->
+                            <form class="row g-3" action="/admin/dashboard/sales" method="post">
+                                <div class="col-6">
+                                    <label for="from" class="form-label">Date from</label>
+                                    <input type="date" class="form-control" id="from" name="first">
+                                </div>
+                                <div class="col-6">
+                                    <label for="to" class="form-label">Date to</label>
+                                    <input type="date" class="form-control" id="to" name="second">
+                                </div>
+                                <% if (message) { %>
+                                <p style="color: brown;"><%= message %> </p>
+                                <% } %>
+                                <div class="text-center pt-3">
+                                    <button type="submit" class="btn btn-success" style="float: right; padding-inline: 50px;">Submit</button>
+                                </div>
+                            </form><!-- End Vertical Form -->
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<%- include('../../layouts/admin/footer.ejs') %>

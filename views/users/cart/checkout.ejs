@@ -1,0 +1,372 @@
+<%-include('../../layouts/user/header.ejs')%>
+  <%-include('../../layouts/user/nav_bar.ejs')%>
+
+
+    <!--================Checkout Area =================-->
+    <section class="checkout_area section_gap" style="margin-top: 40px;">
+      <div class="container ">
+
+          <div class="cupon_area">
+            <form id="couponForm" method="POST">
+              <input type="hidden" value="<%= data.cartTotalPrice %>" name="Total">
+              <input type="text" name="couponCode" placeholder="Enter coupon code">
+              <button type="submit" class="tp_btn">Apply Coupon</button>
+            </form>
+          </div>
+          
+        <div class="billing_details">
+          <form class="row contact_form" action="/cart/checkout" method="post">
+
+            <div class="row">
+              <div class="col-lg-8">
+                <h3>Billing Details</h3>
+                <div class="row mb-4">
+                  <div class="col">
+                    <div class="form-outline">
+                      <input type="text" name="name" value="<%=data.name%>" id="form3Example1" class="form-control" />
+                      <label class="form-label" for="form3Example1">Name</label>
+                    </div>
+                  </div>
+                </div>
+                <% if(data.address.length> 0){ %>
+                <div class="col-12 form-outline mb-4">
+                  <label class="form-label" for="form3Example3">Select Address</label>
+                  <br>
+                  <select class="select" name="address">
+                    <% if (data.address.length> 0) { %>
+                      <% data.address.forEach((address)=> { %>
+                        <option value="<%= address._id %>">
+                          <%= address.name %>,
+                            <%= address.housename %>,
+                              <%= address.street %>,
+                                <%= address.district %>,
+                                  <%= address.state %>,
+                                    <%= address.pincode %>,
+                                      <%= address.country %>,
+                                        <%= address.phone %>
+                        </option>
+                        <% }); %>
+                          <% } %>
+                  </select>
+                </div>
+              <% }%>
+
+
+                <div class="form-outline mb-4">
+                  <br>
+                  <a href="/cart/checkout/add-address"><button type="button" class="btn btn-outline-warning">AddAddress</button></a>
+                </div>
+
+                <div class="form-outline mb-4">
+                  <input type="number" name="phoneNumber" id="form3Example3" value="<%=data.mobileNumber%>"
+                    class="form-control" />
+                  <label class="form-label" for="form3Example3">Phone Number</label>
+                </div>
+
+              </div>
+              <div class="col-lg-4">
+                <div class="order_box">
+                  <h2>Your Order</h2>
+                  <ul class="list list_2">
+                    <% if (data.discount[0]){ %>
+                      <li><a id="subtotal">SUBTOTAL <span>₹<%= data.cartTotalPrice.toFixed(2)  %></span></a></li>
+                      <li><a id="discount">Discount <span class="text-success">-₹<%= data.discount[0].amount.toFixed(2)  %></span></a></li>
+                      <li><a id="subtotal">DELIVERY CHARGES <span class="text-success">FREE Delivery</span></a></li>
+                      <li><a id="total">Total <span class="text-success">₹<%= data.cartTotalPrice -  data.discount[0].amount.toFixed(2)  %></span></a></li>
+                    <% }else{ %>
+                      <li><a id="subtotal">SUBTOTAL <span>₹<%= data.cartTotalPrice.toFixed(2)  %></span></a></li>
+                      <li><a id="discount">Discount <span>₹0.00</span></a></li>
+                      <li><a id="subtotal">DELIVERY CHARGES <span class="text-success">FREE Delivery</span></a></li>
+                      <li><a id="total">Total <span class="text-success">₹<%= data.cartTotalPrice.toFixed(2)  %></span></a></li>
+                    <% } %>
+                    
+                  </ul>
+                  
+                  <h3>Payment Method</h3>
+                  <div class="payment_item">
+                    <div class="radion_btn">
+                      <input type="radio" id="f-option5" name="paymentMethod" value="COD" checked>
+                      <label for="f-option5">Cash On Delivery</label>
+                      <div class="check"></div>
+                    </div>
+                  </div>
+                  <div class="payment_item active">
+                    <div class="radion_btn">
+                      <input type="radio" id="f-option6" name="paymentMethod" value="online">
+                      <label for="f-option6">Razorpay</label>
+                      <img src="img/product/card.jpg" alt="">
+                      <div class="check"></div>
+                    </div>
+                  </div>
+                  <div class="payment_item active">
+                    <div class="radion_btn">
+                      <input type="radio" id="f-option7" name="paymentMethod" value="wallet">
+                      <label for="f-option7">Wallet</label>
+                      <img src="img/product/card.jpg" alt="">
+                      <div class="check"></div>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="primary-btn">Place Order</button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+
+        </div>
+
+
+        <div class="panel-body">
+          <% if (data.cart.length> 0) { %>
+            <% data.cart.forEach((item)=> { %>
+              <% if (item.product) { %>
+                <div class="form-group row">
+                  <div class="col-sm-3 col-xs-3" style="height: 120px; display: flex;">
+                    <img class="img-responsive" src="/proImages/<%= item.product.images[0] %>" />
+                  </div>
+                  <div class="col-sm-6 col-xs-6">
+                    <div class="col-xs-12">
+                      <%= item.product.name %>
+                    </div>
+                    <div class="col-xs-12">
+                      <small>Quantity: <span>
+                          <%= item.quantity %>
+                        </span></small>
+                    </div>
+                  </div>
+                  <div class="col-sm-3 col-xs-3 text-right">
+                    <h6>
+                      <% let proOfferMatch = productOffer.find((x) => x.product_name.equals(item.product.productId)); %>
+                      <% let offerMatch = offers.find((x) => x.category.categoryId.equals(item.product.category)); %>
+                      <% if (proOfferMatch && offerMatch) { %>
+                        <h6>₹<%= (item.product.price * item.quantity) - (((item.product.price * item.quantity) * (offerMatch.discountPercentage + proOfferMatch.discountPercentage))/ 100).toFixed(2) %></h6>
+                        <s><h6 class="l-through">₹ <%= (item.product.price * item.quantity).toFixed(2) %></h6></s>
+                        <span class="text-success"><%= offerMatch.discountPercentage + proOfferMatch.discountPercentage %>% off</span>
+                    
+                      <% } else if (proOfferMatch && !offerMatch) { %>
+                        <h6>₹<%= (item.product.price * item.quantity) - (((item.product.price * item.quantity) * (proOfferMatch.discountPercentage))/ 100).toFixed(2) %></h6>
+                        <s><h6 class="l-through">₹ <%= (item.product.price * item.quantity).toFixed(2) %></h6></s>
+                        <span class="text-success"><%= proOfferMatch.discountPercentage %>% off</span>
+                    
+                      <% } else if (offerMatch && !proOfferMatch) { %>
+                        <h6>₹<%= (item.product.price * item.quantity) - (((item.product.price * item.quantity) * (offerMatch.discountPercentage))/ 100).toFixed(2) %></h6>
+                        <s><h6 class="l-through">₹ <%= (item.product.price * item.quantity).toFixed(2) %></h6></s>
+                        <span class="text-success"><%= offerMatch.discountPercentage %>% off</span>
+                    
+                      <% } else { %>
+                        <h6>₹<%= (item.product.price * item.quantity).toFixed(2) %></h6>
+                      <% } %>
+                    </div>
+                    
+                </div>
+                <% } else if (item.bannerproduct) { %>
+                  <div class="form-group row">
+                    <div class="col-sm-3 col-xs-3" style="height: 120px; display: flex;">
+                      <% if (item.bannerproduct.images && item.bannerproduct.images.length> 0) { %>
+                        <img class="img-responsive" src="/proImages/<%= item.bannerproduct.images[0] %>" />
+                        <% } %>
+                    </div>
+                    <div class="col-sm-6 col-xs-6">
+                      <div class="col-xs-12">
+                        <%= item.bannerproduct.name %>
+                      </div>
+                      <div class="col-xs-12">
+                        <small>Quantity: <span>
+                            <%= item.quantity %>
+                          </span></small>
+                      </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-3 text-right">
+                      <% let proOfferMatch = productOffer.find((x)=> x.product_name.equals(item.bannerproduct.productId)); %>
+                        <% let offerMatch = offers.find((x) => x.category.categoryId.equals(item.bannerproduct.category)); %>
+                        <% if(proOfferMatch && offerMatch){ %>
+
+                          <h6>₹<%= (item.bannerproduct.price - ((item.bannerproduct.price* (offerMatch.discountPercentage + proOfferMatch.discountPercentage ))/100)*item.quantity ).toFixed(2)  %></h6>
+                          <h6 class="l-through">₹ <%= (item.bannerproduct.price* item.quantity).toFixed(2) %></h6> 
+                          <span class="text-success"><%=offerMatch.discountPercentage + proOfferMatch.discountPercentage %>% off</span>
+                        
+                        <% } else if (proOfferMatch && !offerMatch){%>
+                          <h6>₹<%= (item.bannerproduct.price - ((item.bannerproduct.price* proOfferMatch.discountPercentage)/100)* item.quantity ).toFixed(2)  %></h6>
+                          <h6 class="l-through">₹ <%= (item.bannerproduct.price*item.quantity).toFixed(2) %></h6> 
+                          <span class="text-success"><%=proOfferMatch.discountPercentage %>% off</span>
+
+                        <% } else if (offerMatch && !proOfferMatch) {%>
+                          <h6>₹<%= ((item.bannerproduct.price -((item.bannerproduct.price* offerMatch.discountPercentage)/100)) * item.quantity).toFixed(2)  %></h6>
+                          <h6 class="l-through">₹ <%= (item.bannerproduct.price *item.quantity).toFixed(2) %></h6> 
+                          <span class="text-success"><%=offerMatch.discountPercentage %>% off</span>
+                        <% } else {%>
+                          <h6>₹<%= (item.bannerproduct.price* item.quantity).toFixed(2) %> </h6>
+                        <% }%>
+           
+                    </div>
+                  </div>
+                  <% } %>
+                    <% }); %>
+                      <% } %>
+                        <div class="form-group">
+                          <hr />
+                        </div>
+                        <div class="form-group">
+                          <div class="col-xs-12">
+                            <strong>Order Total</strong>
+                            <div class="pull-right">
+                              <span>₹</span>
+                              <span>
+                                <%= data.cartTotalPrice.toFixed(2)  %>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+        </div>
+
+
+
+      </div>
+
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+   $(document).ready(function() {
+  $('#couponForm').submit(function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var formData = $(this).serialize(); // Get the form data
+
+    $.ajax({
+      url: '/cart/checkout/apply_coupon', // Replace with the actual endpoint URL
+      type: 'POST',
+      data: formData,
+      success: function(response) {
+        if (response.response=='Invalied coupon'){
+          swal({
+                text: `${response.response}`,
+            });
+        }else if (response.response.success){
+          $('.list_2').load('/cart/checkout .list_2');
+          swal({
+                text: `Success`,
+            });
+        } else{
+          swal({
+                text: `${response.response}`,
+            });
+        }
+        console.log(response);
+      },
+      error: function(xhr, status, error) {
+        // Handle the error response
+        console.error(error);
+      }
+    });
+  });
+});
+
+</script>
+
+    
+
+    <script>
+      $(document).ready(function () {
+  // Attach event listener to form submission
+        $('form.contact_form').submit(function (event) {
+          event.preventDefault(); // Prevent the default form submission
+          var formData = $(this).serialize();
+          $.ajax({
+            type: 'POST',
+            url: '/cart/checkout',
+            data: formData,
+            success: function (response) {
+
+              if (response.response.viewRazorpay) {
+                console.log(response);
+                console.log(response.response.newOrder,'jkjjk');
+
+                razorpayPaymentt(response.response.order ,response.response.newOrder);
+              } else if ( response.response.COD || response.response.wallet) {
+                location.href = '/ordersuccess';
+              } else if (response.response.wrong){
+                swal({
+                  text: `${response.response.wrong}`,
+                });
+              }
+            },
+            error: function (xhr, status, error) {
+              // Handle the error response
+              console.log(error);
+            }
+          });
+        });
+      });
+
+
+      function razorpayPaymentt(order, newOrder) {
+        console.log('dddddd',order,'dddddddd');
+        var options = {
+          "key": "rzp_test_l6LMVLbOZ1SY8C", // Enter the Key ID generated from the Dashboard
+          "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          "currency": "INR",
+          "name": "Sole Mate", //your business name
+          "description": "Test Transaction",
+          "image": "https://example.com/your_logo",
+          "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+          "handler": function (response) {
+            // console.log('rsssssss',response,'ressss')
+            verifyPayment(response, order, newOrder)
+          },
+          "prefill": {
+            "name": "raheem", //your customer's name
+            "email": "raheem@gmail.com",
+            "contact": "7025939094"
+          },
+          "notes": {
+            "address": "Razorpay Corporate Office"
+          },
+          "theme": {
+            "color": "#3399cc"
+          }
+        };
+        var rzp1 = new Razorpay(options)
+        rzp1.open();
+      }
+
+      rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+      });
+
+      function verifyPayment(payment, order , newOrder) {
+        console.log("ajax 12");
+        $.ajax({
+          url: '/verifyPayment',
+          data: {
+            payment,
+            order,
+            newOrder
+          },
+          method: 'post',
+          success: (response) => {
+            console.log('verrrrrrrr');
+            console.log(response + "true");
+            if (response.status) {
+              location.href = '/ordersuccess'
+            } else if (response.failed) {
+              console.log("failed");
+            }
+          }
+        })
+      }
+    </script>
+
+    <!--================End Checkout Area =================-->
+
+    <%-include('../../layouts/user/footer.ejs')%>

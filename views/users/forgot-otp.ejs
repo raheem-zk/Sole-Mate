@@ -1,0 +1,20 @@
+<%-include('../layouts/user/header.ejs')%>
+
+
+<div class="container height-100 d-flex justify-content-center align-items-center m-5">
+    <div class="position-relative m-5">
+        <div class="card p-2 text-center m-3">
+            <form action="/forgot-otp" method="post">
+            <h6 class="text-danger">Please enter the one time password <br> to verify your account</h6>
+            <div> <span>A code has been sent to</span> <small>+91 <%=userData.mobileNumber %></small> </div>
+                    <input type="hidden" name="number" value="<%=userData.mobileNumber%>">
+                    <input class="m-2 text-center form-control rounded" id="sixth" type="number" name="otp" maxlength="6">
+            <div class="mt-4"> <button type="submit" class="btn btn-danger px-4 validate ">Validate</button> </div>
+        </form>
+        </div>
+
+    </div>
+</div>
+
+
+<%-include('../layouts/user/footer.ejs')%>

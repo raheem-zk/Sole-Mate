@@ -1,0 +1,85 @@
+<header class="header_area sticky-header">
+    <div class="main_menu">
+        <nav class="navbar navbar-expand-lg navbar-light main_box">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <a class="navbar-brand logo_h" href="/"><img src="/img/sole-mate-logo.jpeg" height="50px" width="100" alt=""></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto">
+                        <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+
+
+                        <li class="nav-item"><a class="nav-link" href="/all_products">Shop </a></li>
+                        <li class="nav-item submenu dropdown">
+                          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Pages</a>
+                          <ul class="dropdown-menu">
+                            <% if (loged){ %>
+                              <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                            <% }else { %>
+                              <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                            <% }%>
+                              <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+                              <li class="nav-item"><a class="nav-link" href="/profile/my-orders">Orders</a></li>
+                          </ul>
+                        </li>
+                        <li class="nav-item submenu dropdown">
+                          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Category</a>
+                          <ul class="dropdown-menu">
+                            <% if(category.length > 0){ %>
+                              <% category.forEach((item)=>{ %>
+                              <li class="nav-item"><a class="nav-link" href="/category/<%=item.categoryId%>"><%=item.categoryName %></a></li>
+                              <% }) %>
+                            <% } %>
+                          </ul>
+                        </li>
+                        
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="nav-item">
+                          <a href="/cart" class="cart">
+                            <span class="bi bi-cart"></span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/wihshlist" class="cart">
+                            <span class="bi bi-heart"></span>
+                          </a>
+                        </li>
+                      </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <script>
+      $(document).ready(function() {
+        $('#searchButton').click(function() {
+          var searchValue = $('#searchInput').val();
+    
+          var url = 'your-ajax-endpoint?search=' + encodeURIComponent(searchValue);
+    
+          $.ajax({
+            url: `/search?value=${searchValue}`,
+            method: 'GET',
+            success: function(response) {
+              console.log(response);
+
+            },
+            error: function(xhr, status, error) {
+              // Handle the error here
+              console.error(error);
+            }
+          });
+        });
+      });
+    </script>
+</header>
+
