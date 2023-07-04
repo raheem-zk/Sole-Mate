@@ -54,12 +54,12 @@
 						<span class="text-success"><%=offerMatch.discountPercentage + proOfferMatch.discountPercentage %>% off</span>
 					
 					<% } else if (proOfferMatch && !offerMatch){%>
-						<h6>₹<%= productData.price - ((productData.price* proOfferMatch.discountPercentage)/100)  %></h6>
+						<h6>₹<%= productData.price - ((productData.price* proOfferMatch.discountPercentage)/100).toFixed(2)  %></h6>
 						<s><h6 class="l-through">₹ <%= productData.price.toFixed(2) %></h6> </s>
 						<span class="text-success"><%=proOfferMatch.discountPercentage %>% off</span>
 
 					<% } else if (offerMatch && !proOfferMatch) {%>
-						<h6>₹<%= productData.price -((productData.price* offerMatch.discountPercentage)/100)  %></h6>
+						<h6>₹<%= productData.price -((productData.price* offerMatch.discountPercentage)/100).toFixed(2)  %></h6>
 						<s><h6 class="l-through">₹ <%= productData.price.toFixed(2) %></h6> </s>
 						<span class="text-success"><%=offerMatch.discountPercentage %>% off</span>
 					<% } else {%>

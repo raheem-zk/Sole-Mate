@@ -48,14 +48,15 @@ app.get('*', function(req, res, next) {
   err.statusCode = 404;
   next(err);
 });
+
 app.use((err, req, res, next) => {
-  console.error(err); // Log the error to the console
-  if(err.statusCode == 404){
+  // console.error(err); // Log the error to the console
+  if (err.statusCode == 404) {
     return res.render('users/404');
   }
-  res.statusCode = res.statusCode || 500
-  return res.render('users/500',{statusCode});
-
+  res.statusCode = res.statusCode || 500;
+  return res.render('users/500', { statusCode: res.statusCode });
 });
+
 const PORT = process.env.PORT;
 app.listen(PORT,(error)=> console.log('server is running...'))

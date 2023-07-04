@@ -163,21 +163,21 @@
 					<% let offerMatch = offers.find((x) => x.category.categoryId.equals(item.category)); %>
 					<% if(proOfferMatch && offerMatch){ %>
 
-						<h6>₹<%= item.price - ((item.price* (offerMatch.discountPercentage + proOfferMatch.discountPercentage ))/100)  %></h6>
-						<h6 class="l-through">₹ <%= item.price %>.00</h6> 
+						<h6>₹<%= item.price - ((item.price* (offerMatch.discountPercentage + proOfferMatch.discountPercentage ))/100).toFixed(2)  %></h6>
+						<h6 class="l-through">₹ <%= item.price.toFixed(2) %></h6> 
 						<span class="text-success"><%=offerMatch.discountPercentage + proOfferMatch.discountPercentage %>% off</span>
 					
 					<% } else if (proOfferMatch && !offerMatch){%>
-						<h6>₹<%= item.price - ((item.price* proOfferMatch.discountPercentage)/100)  %></h6>
-						<h6 class="l-through">₹ <%= item.price %>.00</h6> 
+						<h6>₹<%= item.price - ((item.price* proOfferMatch.discountPercentage)/100).toFixed(2)  %></h6>
+						<h6 class="l-through">₹ <%= item.price.toFixed(2) %>.00</h6> 
 						<span class="text-success"><%=proOfferMatch.discountPercentage %>% off</span>
 
 					<% } else if (offerMatch && !proOfferMatch) {%>
-						<h6>₹<%= item.price -((item.price* offerMatch.discountPercentage)/100)  %></h6>
-						<h6 class="l-through">₹ <%= item.price %>.00</h6> 
+						<h6>₹<%= item.price -((item.price* offerMatch.discountPercentage)/100).toFixed(2)  %></h6>
+						<h6 class="l-through">₹ <%= item.price.toFixed(2) %></h6> 
 						<span class="text-success"><%=offerMatch.discountPercentage %>% off</span>
 					<% } else {%>
-						<h6>₹<%= item.price %>.00 </h6>
+						<h6>₹<%= item.price.toFixed(2) %> </h6>
 					<% }%>
 				  </div>
 				  <div class="prd-bottom" style="position: absolute; bottom: 0;">

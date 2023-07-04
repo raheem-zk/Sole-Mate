@@ -53,11 +53,12 @@ const bannerproduct_detail = async (req, res)=>{
             localField: 'category',
             foreignField: 'categoryId'
           });
-          console.log(productId,'kjd',productData);
+          // console.log(productId,'kjd',productData);
           let loged = false;
           if(req.session.userId){
             loged = true;
           }
+          console.log(productData,'productData .....',productOffer,'productOffer......',offers,'offers..........',)
           return res.render('product/product_detail',{ productData , category, loged, offers, productOffer});
         
     } catch (error) {

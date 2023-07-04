@@ -204,12 +204,7 @@ const verifyLogin = async (req, res) => {
 
 const forgot_password = async (req, res) => {
   try {
-    let loged = false;
-    if (req.session.userId) {
-      loged = true;
-    }
-    const category = await categorySchema.find({status: true});
-    res.render('forgot-password', { message: '', loged, category });
+    res.render('forgot-password', { message: ''});
   } catch (error) {
     console.log(error);
   }
@@ -221,6 +216,9 @@ const getNumber = async (req, res) => {
     const mobileNumber = req.body.mobileNumber;
     if (!mobileNumber) {
       return res.render('forgot-password', { message: 'Please Enter your mobile number' });
+    }
+    if(mobileNumber.length !==10){
+      return res.render('forgot-password', { message: 'Please Enter your curect mobile number' });
     }
     let userData = await userSchema.findOne({ mobileNumber: mobileNumber });
     console.log(userData);
@@ -247,6 +245,7 @@ const verifyOtp = async (req, res) => {
         if (verification_check.status === "approved") {
           // OTP verification successful
           console.log(verification_check.status);
+          // return res.send(number)
           return res.render('reset_password', { number, message: '' });
         }
       })
@@ -266,6 +265,9 @@ const reset_password = async (req, res) => {
     const number = req.body.number;
     const newPassword = req.body.newPassword;
     const ConformPassword = req.body.ConformPassword;
+    if (newPassword.length < 6){
+      return res.render('reset_password', { number, message: 'Please enter a strong password' })
+    }
     if (newPassword != ConformPassword) {
       return res.render('reset_password', { number, message: 'Passsword is not Match' })
     }

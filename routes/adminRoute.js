@@ -74,7 +74,7 @@ admin_route.post('/dashboard/coupon/edit_coupon',couponController.update_coupon)
 // category offer
 admin_route.get('/dashboard/offer_managemnet',auth.isLogin,offerController.offer_managemnet)
 admin_route.get('/dashboard/add_offer',auth.isLogin,offerController.add)
-admin_route.post('/dashboard/add_offer',upload.single('image'),offerController.get_Data)
+admin_route.post('/dashboard/add_offer',offerController.get_Data)
 
 admin_route.get('/dashboard/edit/:id',auth.isLogin,offerController.edit)
 admin_route.post('/dashboard/edit',offerController.update)

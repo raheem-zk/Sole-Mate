@@ -48,6 +48,10 @@ const checkout = async (req, res) => {
         localField: 'cart.bannerproduct',
         foreignField: 'bannerId'
       });
+      console.log( data.cart.length ,'cart length ....');
+      if (data.cart.length ===0){
+        return res.redirect('/');
+      }
     const products = await productSchema.find({ status: true });
     let reload = false;
     const banners = await bannerSchema.find({status: true})
@@ -155,7 +159,7 @@ const checkout = async (req, res) => {
                 }
               );
               reload = true;
-              console.log(reload, 'reload ......');
+              // console.log(reload, 'reload ......');
               break;
             }
           }
@@ -174,7 +178,7 @@ const checkout = async (req, res) => {
     }
 
     if (reload) {
-      console.log(reload, 'reload ......{{{{{{{\\\\\\\\');
+      // console.log(reload, 'reload ......{{{{{{{\\\\\\\\');
       data = await userSchema
         .findOne({ userId: req.session.userId })
         .populate({
@@ -189,14 +193,14 @@ const checkout = async (req, res) => {
           localField: 'cart.bannerproduct',
           foreignField: 'bannerId'
         });
-      console.log('..', data, 'dkkd');
+      // console.log('..', data, 'dkkd');
       return res.render('cart/checkout', { data, message: '', category, loged , offers, productOffer});
     }
 
     if (couponCode) {
       const currentDate = new Date();
       const coupon = await couponSchema.findOne({ couponName: couponCode });
-      console.log('kkk', coupon, 'coupon details');
+      // console.log('kkk', coupon, 'coupon details');
       
       if (data.cartTotalPrice < coupon.minimumPrice || coupon.expiryDate >= currentDate) {
         let result = await userSchema.updateOne({ userId: req.session.userId }, { $set: { discount: {} } });
@@ -215,8 +219,8 @@ const checkout = async (req, res) => {
               localField: 'cart.bannerproduct',
               foreignField: 'bannerId'
             });
-          console.log('coupon amount 0 set', result);
-          console.log(data);
+          // console.log('coupon amount 0 set', result);
+          // console.log(data);
           return res.render('cart/checkout', { data, message: '', category, loged , offers, productOffer});
         }
       }
