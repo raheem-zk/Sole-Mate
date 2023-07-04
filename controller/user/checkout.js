@@ -558,7 +558,14 @@ const get_address = async (req, res) => {
       if (!couponCode || !total){
         return res.json({response:' Enter coupon code'});
       }
-      const couponData = await couponSchema.findOne({couponName : couponCode, status:'Active' })
+      const couponData = await couponSchema.findOne({ couponName: couponCode, status: 'Active' });
+      const currentDate = new Date();
+
+      if (couponData && couponData.expiryDate <= currentDate) {
+        await couponSchema.updateOne({ couponName: couponCode }, { $set: { status: 'Expired' } });
+        return res.json({ response: 'Coupon expired' });
+      }
+
       if (!couponData){
         return res.json({response:'Invalied coupon'});
       }

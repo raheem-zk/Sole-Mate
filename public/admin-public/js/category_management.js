@@ -13,3 +13,35 @@ function categoryAction(categoryId, status) {
   }
   
   
+  function addCategory(){
+    let data = document.getElementById('addcategory').value;
+
+    $.ajax({
+      url:'/admin/dashboard/add-category',
+      method:'post',
+      data: {data},
+      success:(response)=>{
+        //  added
+        $('#dataTable').load('/admin/dashboard/category #dataTable');
+      }
+    })
+  }
+
+
+  function editCategory(){
+    let categoryName = document.getElementById('newCategoryName').value;
+    let categoryId = document.getElementById('categoryId').value;
+    let data ={
+      categoryName,
+      categoryId
+    }
+    $.ajax({
+      url:'/admin/dashboard/edit-category',
+      method:'post',
+      data: {data},
+      success:(response)=>{
+        alert(response)
+        $(`#categoryId`).load(`/admin/dashboard/category #categoryId`);
+      }
+    })
+  }

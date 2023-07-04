@@ -26,6 +26,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Order Management</h6>
                         </div>
                         <div class="card-body">
+        
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
@@ -172,5 +173,17 @@
         </div>
     </div>
 
-
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    
+    
+    
+    <script>
+        $(document).ready(function () {
+        $('#example').DataTable();
+    });
+    </script>
 <%- include('../../layouts/admin/footer.ejs') %>
+
+

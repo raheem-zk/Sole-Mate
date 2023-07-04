@@ -29,12 +29,12 @@
                 </div>
                 <div class="card-body">
                     <!-- Category Adding Form -->
-                    <form method="post" action="/admin/dashboard/add-category">
+                    <form method="post">
                         <div class="form-group">
                             <label for="categoryName">Category Name</label>
-                            <input type="text" name="categoryName" class="form-control" id="categoryName" placeholder="Enter category name">
+                            <input type="text" name="categoryName" class="form-control" id="addcategory" placeholder="Enter category name">
                         </div>
-                        <button type="submit" class="btn btn-primary">Add Category</button>
+                        <button onclick="addCategory()" type="button" class="btn btn-primary">Add Category</button>
                     </form>
                 </div>
             </div>

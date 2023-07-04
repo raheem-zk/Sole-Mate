@@ -14,12 +14,12 @@ const category_management = async ( req, res) =>{
 }
 const add_category = async (req, res) => {
   try {
-    let categoryName = req.body.categoryName;
+    let categoryName = req.body.data;
     let trimmedCategoryName = categoryName.trim();
     let existingCategory = await categorySchema.findOne({ categoryName: trimmedCategoryName });
-
     if (existingCategory) {
-      return res.redirect('/dashboard/category');
+      return res.json({success: true});
+      // return res.redirect('/dashboard/category');
     }
 
     const categoryId = new mongoose.Types.ObjectId(); // Generate a new ObjectId
@@ -30,7 +30,8 @@ const add_category = async (req, res) => {
     };
 
     await categorySchema.create(data);
-    return res.redirect('/admin/dashboard/category');
+    return res.json({success:'success'});
+    // return res.redirect('/admin/dashboard/category');
   } catch (error) {
     console.log(error);
     res.render('404');
@@ -42,6 +43,7 @@ const edit_category = async (req, res) => {
     let categoryId = req.body.id; // Corrected variable name
     let categoryName = req.body.categoryName;
     console.log(categoryId, categoryName)
+    
     if (!categoryId || !categoryName) {
       return res.redirect('/admin/dashboard/category');
     }
@@ -54,32 +56,6 @@ const edit_category = async (req, res) => {
   }
 }
 
-// const category_action = async (req, res)=>{
-//   try {
-//     let categoryId = req.query.id; 
-//     let status = req.query.status; 
-//     let userData = await categorySchema.findOne({ categoryId: categoryId });
-//     if (!userData) {
-//       return res.redirect('/admin/dashboard/product');
-//     }
-//     if (status == 'false') { 
-//       await categorySchema.updateOne({ categoryId: categoryId }, { status: true });
-//       await productSchema.update({ status: true });
-//       await bannerModel.update({ status: true });
-//     res.json({ response: 'success' });
-
-//     } else {
-//       await categorySchema.updateOne({ categoryId: categoryId }, { status: false });
-//       await productSchema.update({ status: false });
-//       await bannerModel.update({ status: false });
-//     res.json({ response: 'success' });
-//     }
-//     res.json({ response: 'success' });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ error: 'An error occurred' });
-//   }
-// }
 const category_action = async (req, res) => {
   try {
     let categoryId = req.query.id;
