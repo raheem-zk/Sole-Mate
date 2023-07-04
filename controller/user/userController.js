@@ -1,4 +1,3 @@
-require('dotenv').config();
 
 const User = require('../../models/user/userModel');
 const bcrypt = require('bcrypt');
@@ -6,10 +5,13 @@ const { v4: uuidv4 } = require('uuid');
 const referralCodes = require('referral-codes');
 const userSchema = require('../../models/user/userModel');
 
+require('dotenv').config();
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const verifySid = process.env.VERIFYSID;
 const client = require("twilio")(accountSid, authToken);
+
+
 
 // const client = require("twilio")(process.env.accountSid, process.env.authToken);
 const mongoose = require('mongoose');
@@ -299,6 +301,7 @@ const verify_number = async (req, res) => {
   try {
     const number = req.body.number;
     const userFind = await userSchema.findOne({ mobileNumber: number })
+    console.log(userFind,'user finded ...')
     if (!userFind) {
       return res.json({ response: { error: "User not found" } });
     }
