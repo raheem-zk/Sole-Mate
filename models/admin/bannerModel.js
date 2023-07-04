@@ -39,6 +39,11 @@ const bannerSchema = mongoose.Schema({
     status:{
         type:Boolean,
         default:true
+    },
+    block:{
+        type:Boolean,
+        default:false,
+        required:true
     }
 })
 

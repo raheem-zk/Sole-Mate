@@ -102,15 +102,28 @@ const upload_product = async (req, res) => {
 const productBlock = async ( req, res) =>{
   try {
     let productId = req.query.id; 
-    let status = req.query.status; 
-    let userData = await productSchema.findOne({ productId: productId });
-    if (!userData) {
+    let block = req.query.status; 
+    console.log(block);
+    let productData = await productSchema.findOne({ productId: productId });
+    if (!productData) {
       return res.redirect('/admin/dashboard/product');
     }
-    if (status == 'false') { 
-      await productSchema.updateOne({ productId: productId }, { status: true });
+    if (block == 'false') { 
+      await productSchema.updateOne({ productId: productId }, {$set:{ block: true }})
+      .then((result)=>{
+        console.log(result);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
     } else {
-      await productSchema.updateOne({ productId: productId }, { status: false });
+      await productSchema.updateOne({ productId: productId }, {$set:{ block: false }})
+      .then((result)=>{
+        console.log(result);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
     }
     res.json({ response: 'success' });
   } catch (error) {

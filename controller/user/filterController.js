@@ -32,19 +32,19 @@ const all_products = async (req, res)=>{
         if (req.query.low && req.query.high) {
           let low = req.query.low.trim();
           let high = req.query.high.trim();
-          let products = await productSchema.find({ price: { $gte: low, $lt: high }, status: true })
+          let products = await productSchema.find({ price: { $gte: low, $lt: high }, status: true, block:false })
             .skip(skip)
             .limit(limit);
-          let productsSize = await productSchema.countDocuments({ price: { $gte: low, $lt: high }, status: true });
+          let productsSize = await productSchema.countDocuments({status: true, block:false , price: { $gte: low, $lt: high } });
           const size = Math.ceil(productsSize / limit);
           return res.render('filter/all_products', { products, category, coupon, size, page, loged,offers,productOffer });
         }
         if(req.query.priceLow){
           let num = req.query.priceLow;
-          const products = await productSchema.find({ status: true }).sort({ price: num })
+          const products = await productSchema.find({ status: true, block:false  }).sort({ price: num })
           .skip(skip)
           .limit(limit);
-          const productsSize = await productSchema.countDocuments({ status: true });
+          const productsSize = await productSchema.countDocuments({status: true, block:false  });
           const size = Math.ceil(productsSize / limit);
           return res.render('filter/all_products', { products, category, coupon, size, page, loged, offers ,productOffer});
         }
@@ -54,11 +54,11 @@ const all_products = async (req, res)=>{
           let value = req.query.search.trim();
           const limit = 8;
           const skip = (page - 1) * limit;
-          let productsSize = await productSchema.countDocuments({ name: { $regex: value, $options: 'i' } });
+          let productsSize = await productSchema.countDocuments({ name: { $regex: value, $options: 'i' } ,status: true, block:false });
           const size = Math.ceil(productsSize / limit);
       
           const products = await productSchema
-            .find({ name: { $regex: value, $options: 'i' } })
+            .find({ name: { $regex: value, $options: 'i' } ,status: true, block:false })
             .skip(skip)
             .limit(limit);
           return res.render('filter/all_products', { products, category, coupon, size, page ,loged, offers, productOffer});
@@ -66,7 +66,7 @@ const all_products = async (req, res)=>{
 
         if (req.query.category){
             const categoryId = req.query.category;
-            const products = await productSchema.find({ category: categoryId ,status:true})
+            const products = await productSchema.find({ category: categoryId ,status: true, block:false })
             // .populate({
             //     path: 'category',
             //     model: 'category',
@@ -75,14 +75,14 @@ const all_products = async (req, res)=>{
             //   })
               .skip(skip)
               .limit(limit);
-              let productsSize = await productSchema.countDocuments({ category: categoryId ,status:true})
+              let productsSize = await productSchema.countDocuments({ category: categoryId , status: true, block:false })
               const size = Math.ceil(productsSize / limit);
             return res.render('filter/all_products', { products, category, coupon, size, page ,loged, offers, productOffer});
         }
-        let products = await productSchema.find({ status: true })
+        let products = await productSchema.find({ status: true, block:false })
           .skip(skip)
           .limit(limit);
-        let productsSize = await productSchema.countDocuments({ status: true });
+        let productsSize = await productSchema.countDocuments({ status: true, block:false  });
         const size = Math.ceil(productsSize / limit);
         
         
@@ -104,7 +104,7 @@ const category_filter = async (req, res)=>{
         }
         const productOffer = await productOfferSchema.find({status:'Active'});
 
-        const products = await productSchema.find({ category: categoryId ,status:true})
+        const products = await productSchema.find({ category: categoryId ,status: true, block:false })
         // .populate({
         //     path: 'category',
         //     model: 'category',
@@ -130,7 +130,7 @@ const search = async (req, res) => {
     try {
       console.log(req.body.search);
       let payload = req.body.search.trim();
-      let searchResults = await productSchema.find({ name: { $regex: new RegExp('^'+payload+'.*', 'i') } }).limit(10).exec();
+      let searchResults = await productSchema.find({status: true, block:false , name: { $regex: new RegExp('^'+payload+'.*', 'i') } }).limit(10).exec();
       console.log(searchResults);
       res.json({ payload: searchResults });
     } catch (error) {

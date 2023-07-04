@@ -107,9 +107,21 @@ const bannerBlock = async ( req, res) =>{
       return res.redirect('/admin/dashboard/banner');
     }
     if (status == 'false') { 
-      await bannerSchema.updateOne({ bannerId: bannerId }, { status: true });
+      await bannerSchema.updateOne({ bannerId: bannerId }, {$set:{ block: true }})
+      .then((result)=>{
+        console.log(result,'false case true');
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
     } else {
-      await bannerSchema.updateOne({ bannerId: bannerId }, { status: false });
+      await bannerSchema.updateOne({ bannerId: bannerId }, {$set:{ block: false }})
+      .then((result)=>{
+        console.log(result,'true case false');
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
     }
     res.json({ response: 'success' });
   } catch (error) {

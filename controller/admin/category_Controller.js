@@ -89,14 +89,15 @@ const category_action = async (req, res) => {
       return res.redirect('/admin/dashboard/product');
     }
     if (status === 'false') {
-      await categorySchema.updateOne({ categoryId: categoryId }, { status: true });
-      await productSchema.updateMany({ status: true });
-      await bannerModel.updateMany( { status: true });
+      await categorySchema.updateOne({ categoryId: categoryId }, {$set:{ status: true }});
+      await productSchema.updateMany({ category: categoryId }, { $set: { status: true } });
+      await bannerModel.updateMany({ category: categoryId }, { $set: { status: true } });
+
       res.json({ response: 'success' });
     } else {
-      await categorySchema.updateOne({ categoryId: categoryId }, { status: false });
-      await productSchema.updateMany( { status: false });
-      await bannerModel.updateMany({ status: false });
+      await categorySchema.updateOne({ categoryId: categoryId }, {$set:{ status: false }});
+      await productSchema.updateMany({category:categoryId}, {$set:{ status: false }});
+      await bannerModel.updateMany({category:categoryId},{$set:{ status: false }});
       res.json({ response: 'success' });
     }
   } catch (error) {

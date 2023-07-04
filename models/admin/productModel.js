@@ -39,6 +39,11 @@ const Product = mongoose.Schema({
         type:Boolean,
         default:true
     },
+    block:{
+        type:Boolean,
+        default:false,
+        required:true
+    }
 })
 
 module.exports= mongoose.model('products',Product)

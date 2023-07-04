@@ -6,7 +6,6 @@ function productStatusAction(productId, status) {
     url: `/admin/dashboard/product/action?id=${productId}&status=${status}`,
     method: 'get',
     success: () => {
-      console.log(productId, status);
       $(`.statusss${productId}-${status}`).load(`/admin/dashboard/product .statusss${productId}-${status}`);
       $(`.statuss${productId}`).load(`/admin/dashboard/product .statuss${productId}`);
       $(`.status${productId}`).load(`/admin/dashboard/product .status${productId}`);
@@ -54,7 +53,6 @@ function bannerStatusAction(bannerId, status) {
     url: `/admin/dashboard/banner/action?id=${bannerId}&status=${status}`,
     method: 'get',
     success: () => {
-      console.log(bannerId, status);
       $(`.statusss${bannerId}-${status}`).load(`/admin/dashboard/banner .statusss${bannerId}-${status}`);
       $(`.statuss${bannerId}`).load(`/admin/dashboard/banner .statuss${bannerId}`);
       $(`.status${bannerId}`).load(`/admin/dashboard/banner .status${bannerId}`);

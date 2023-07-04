@@ -46,6 +46,18 @@ const get_date = async (req, res)=>{
 const sales_report = async (req, res)=>{
     try {
         const salesdata = await orderSchema.find({status: 'delivered'})
+        .populate({
+            path: 'product.productId',
+            model: 'products',
+            localField: 'product.productId',
+            foreignField: 'productId'
+          })
+        .populate({
+            path: 'product.bannerId',
+            model: 'banner',
+            localField: 'product.bannerId',
+            foreignField: 'bannerId'
+          })
         return res.render('sales/sales_reports',{salesdata})
     } catch (error) {
         console.log(error);

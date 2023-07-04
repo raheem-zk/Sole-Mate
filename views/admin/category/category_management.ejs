@@ -1,175 +1,154 @@
 <%- include('../../layouts/admin/header.ejs') %>
 
-    <style>
-        .edit-form {
-            display: none;
-        }
-    </style>
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+<style>
+    .edit-form {
+        display: none;
+    }
+</style>
 
-        <!-- Main Content -->
-        <div id="content">
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
 
-            <!-- Topbar -->
-            <%-include('../../layouts/admin/nav.ejs')%>
+    <!-- Main Content -->
+    <div id="content">
 
-            <!-- End of Topbar -->
+        <!-- Topbar -->
+        <%- include('../../layouts/admin/nav.ejs') %>
+        <!-- End of Topbar -->
 
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
 
-                <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800 text-center">Category Management</h1>
-                    
+            <!-- Page Heading -->
+            <h1 class="h3 mb-2 text-gray-800 text-center">Category Management</h1>
 
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Category Management </h6>
-                <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Add Category</h6>
+            <!-- Add Category -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Add Category</h6>
+                </div>
+                <div class="card-body">
+                    <!-- Category Adding Form -->
+                    <form method="post" action="/admin/dashboard/add-category">
+                        <div class="form-group">
+                            <label for="categoryName">Category Name</label>
+                            <input type="text" name="categoryName" class="form-control" id="categoryName" placeholder="Enter category name">
                         </div>
-                        <div class="card-body">
-                            <!-- Category Adding Form -->
-                            <form method="post" action="/admin/dashboard/add-category">
-                                <div class="form-group">
-                                    <label for="categoryName">Category Name</label>
-                                    <input type="text" name="categoryName" class="form-control" id="categoryName"
-                                        placeholder="Enter category name">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Add Category</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <tbody>
-                                    <% if (category.length> 0) { %>
-                                        <% category.forEach((item, index)=> { %>
-                                            <tr>
-                                                <td>
-                                                    <%= index + 1 %>
-                                                </td>
-                                                <td>
-                                                    <%= item.categoryName %>
-                                                </td>
-                                                <% if (item.status == true) { %>
-                                                    <td class="text-success statuss<%= item.categoryId %>"><%= item.status %></td>
-                                                  <% } else { %>
-                                                    <td class="text-danger statuss<%= item.categoryId %>"><%= item.status %></td>
-                                                  <% } %>
-                                                <td>
-                                                    <ul>
-                                                        <div class="status<%= item.categoryId %>">
-                                                          <% if (item.status == true) { %>
-                                                            <button type="button" onclick="categoryAction('<%= item.categoryId%>', '<%= item.status %>')" class="btn btn-danger">Unlist</button>
-                                                          <% } else { %>
+                        <button type="submit" class="btn btn-primary">Add Category</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Category List -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Category List</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <tbody>
+                                <% if (category.length > 0) { %>
+                                    <% category.forEach((item, index) => { %>
+                                        <tr>
+                                            <td><%= index + 1 %></td>
+                                            <td><%= item.categoryName %></td>
+                                            <% if (item.status == true) { %>
+                                                <td class="text-success statuss<%= item.categoryId %>"><%= item.status %></td>
+                                            <% } else { %>
+                                                <td class="text-danger statuss<%= item.categoryId %>"><%= item.status %></td>
+                                            <% } %>
+                                            <td>
+                                                <ul>
+                                                    <div class="status<%= item.categoryId %>">
+                                                        <% if (item.status == true) { %>
+                                                            <button type="button" onclick="categoryAction('<%= item.categoryId %>', '<%= item.status %>')" class="btn btn-danger">Unlist</button>
+                                                        <% } else { %>
                                                             <button type="button" onclick="categoryAction('<%= item.categoryId %>', '<%= item.status %>')" class="btn btn-success">List</button>
-                                                          <% } %>
-                                                        </div>
-                                                                <!-- Category Editing Button -->
-                                                                <form method="post"
-                                                                    action="/admin/dashboard/edit-category"
-                                                                    id="editForm" class="edit-form mt-3">
-                                                                    <div class="form-group">
-                                                                        <input type="text" name="categoryName"
-                                                                            value="<%= item.categoryName %>"
-                                                                            class="form-control"
-                                                                            placeholder="Enter edited content">
-                                                                    </div>
-                                                                    <input type="hidden" name="id"
-                                                                        value="<%= item.categoryId %>">
-                                                                    <button type="submit"
-                                                                        class="btn btn-success">Save</button>
-                                                                </form>
-                                                                <button type="button" class="btn btn-primary mt-2"
-                                                                    id="editButton"
-                                                                    onclick="showEditForm()">Edit</button>
-                                                    </ul>
-
-
-                                                </td>
-                                            </tr>
-                                            <% }) %>
-                                                <% } else { %>
-                                                    <tr>
-                                                        <td colspan="4">Empty!</td>
-                                                    </tr>
-                                                    <% } %>
-                                </tbody>
-
-
-                        </div>
+                                                        <% } %>
+                                                    </div>
+                                                    <div class="edit-form mt-3" id="editForm<%= item.categoryId %>">
+                                                        <form method="post" action="/admin/dashboard/edit-category">
+                                                            <div class="form-group">
+                                                                <input type="text" name="categoryName" value="<%= item.categoryName %>" class="form-control" placeholder="Enter edited content">
+                                                            </div>
+                                                            <input type="hidden" name="id" value="<%= item.categoryId %>">
+                                                            <button type="submit" class="btn btn-success">Save</button>
+                                                        </form>
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary mt-2" id="editButton<%= item.categoryId %>" onclick="showEditForm('<%= item.categoryId %>')">Edit</button>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="4">Empty!</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
             </div>
-            <!-- /.container-fluid -->
 
         </div>
-
+        <!-- /.container-fluid -->
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- End of Main Content -->
+</div>
+<!-- End of Content Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
+<!-- Scroll to Top Button -->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="login.html">Logout</a>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="/vendor/jquery/jquery.min.js"></script>
-    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Core plugin JavaScript -->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="/js/sb-admin-2.min.js"></script>
+<!-- Custom scripts for all pages -->
+<script src="/js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Page level plugins -->
+<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="/js/demo/datatables-demo.js"></script>
-    <script src="/js/category_management.js"></script>
+<!-- Page level custom scripts -->
+<script src="/js/demo/datatables-demo.js"></script>
+<script src="/js/category_management.js"></script>
 
-    <script>
-        function showEditForm() {
-            document.getElementById("editButton").style.display = "none";
-            document.getElementById("editForm").style.display = "block";
-        }
+<script>
+    function showEditForm(id) {
+        var editButton = document.getElementById("editButton" + id);
+        var editForm = document.getElementById("editForm" + id);
 
-    </script>
+        editButton.style.display = "none";
+        editForm.style.display = "block";
+    }
+</script>
 
-    <%- include('../../layouts/admin/footer.ejs') %>
+<%- include('../../layouts/admin/footer.ejs') %>

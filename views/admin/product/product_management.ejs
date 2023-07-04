@@ -35,7 +35,8 @@
                                             <th>Stock</th>
                                             <th>Category</th>
                                             <th>Image</th>
-                                            <th>Status</th>
+                                            <th>Category Status</th>
+                                            <th>block</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -47,7 +48,8 @@
                                             <th>Stock</th>
                                             <th>Category</th>
                                             <th>Image</th>
-                                            <th>Status</th>
+                                            <th>Category Status</th>
+                                            <th>block</th>
                                             <th>Action</th>
                                         </tr>
                                     </tfoot>
@@ -65,7 +67,7 @@
                                                   <ul>
                                                     <% item.images.forEach((image) => { %>
                                                       <li style="display: block; margin-right: 10px;">
-                                                        <img src="/proImages/<%= image %>" alt="Product Image" width="100%" height="100">
+                                                        <img src="/proImages/<%= image %>" alt="Product Image" width="100px" height="auto">
                                                       </li>
                                                     <% }) %>
                                                   </ul>
@@ -73,17 +75,22 @@
                                               </td>
                                               
                                               <% if (item.status == true) { %>
-                                                <td class="text-success statuss<%= item.productId %>"><%= item.status %></td>
+                                                <td class="text-success"><%= item.status %></td>
                                               <% } else { %>
-                                                <td class="text-danger statuss<%= item.productId %>"><%= item.status %></td>
+                                                <td class="text-danger"><%= item.status %></td>
+                                              <% } %>
+                                              <% if (item.block == true) { %>
+                                                <td class="text-success statuss<%= item.productId %>"><%= item.block %></td>
+                                              <% } else { %>
+                                                <td class="text-danger statuss<%= item.productId %>"><%= item.block %></td>
                                               <% } %>
                                               <td>
                                                 <ul>                                                    
                                                 <div class="status<%= item.productId %>">
-                                                  <% if (item.status == true) { %>
-                                                    <button type="button" onclick="productStatusAction('<%= item.productId %>', '<%= item.status %>')" class="btn btn-danger">Unlist</button>
+                                                  <% if (item.block == false) { %>
+                                                    <button type="button" onclick="productStatusAction('<%= item.productId %>', '<%= item.block %>')" class="btn btn-danger">Unlist</button>
                                                   <% } else { %>
-                                                    <button type="button" onclick="productStatusAction('<%= item.productId %>', '<%= item.status %>')" class="btn btn-success">List</button>
+                                                    <button type="button" onclick="productStatusAction('<%= item.productId %>', '<%= item.block %>')" class="btn btn-success">List</button>
                                                   <% } %>
                                                   <a href="/admin/dashboard/product/edit-product<%=item.productId%>"><button type="button" class="btn btn-primary mt-3">Edit</button></a>
                                                   </ul>

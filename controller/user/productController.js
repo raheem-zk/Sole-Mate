@@ -9,7 +9,8 @@ const product_detail = async (req, res)=>{
     try {
         let productId  = req.params.id;
         const category = await categorySchema.find();
-        const productData = await productSchema.findOne({productId: productId}).populate({
+        const productData = await productSchema.findOne({productId: productId,status: true ,block: false })
+        .populate({
             path: 'category',
             model: 'category',
             localField: 'category',
@@ -39,7 +40,7 @@ const bannerproduct_detail = async (req, res)=>{
         let productId  = req.params.id;
         const category = await categorySchema.find();
 
-        const productData = await bannerSchema.findOne({bannerId: productId}).populate({
+        const productData = await bannerSchema.findOne({bannerId: productId ,status: true ,block: false}).populate({
             path: 'category',
             model: 'category',
             localField: 'category',
