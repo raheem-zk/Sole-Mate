@@ -49,7 +49,7 @@ user_route.get('/profile/manage-address', auth.isLogin, profileController.manage
 user_route.get('/profile/manage-address/add-address', auth.isLogin, profileController.add_address);
 user_route.post('/profile/manage-address/add-address', profileController.get_address);
 user_route.get('/profile/manage-address/edit/:id', auth.isLogin, profileController.edit_address);
-user_route.post('/profile/manage-address/edit-address', auth.isLogin, profileController.update_address);
+user_route.post('/profile/manage-address/edit-address', profileController.update_address);
 user_route.get('/profile/manage-address/remove/:id', auth.isLogin, profileController.remove);
 
 user_route.get('/profile/my-orders', auth.isLogin, profileController.my_orders)
@@ -59,11 +59,11 @@ user_route.get('/profile/my-orders/action/', auth.isLogin, profileController.ord
 // cart 
 user_route.get('/cart/add/:id', cartController.add);
 user_route.get('/cart/AddbannerToCart/:id', cartController.bannerproduct);
-user_route.get('/cart/remove/:id', auth.isLogin, cartController.remove);
-user_route.get('/cart/removebanner/:id', auth.isLogin, cartController.removebanner);
+user_route.get('/cart/remove/:id', cartController.remove);
+user_route.get('/cart/removebanner/:id', cartController.removebanner);
 user_route.get('/cart', cartController.cart);
-user_route.get('/cart/banner-quantity/', auth.isLogin, cartController.quntity)
-user_route.get('/cart/product-quantity/', auth.isLogin, cartController.productquntity)
+user_route.get('/cart/banner-quantity/', cartController.quntity)
+user_route.get('/cart/product-quantity/', cartController.productquntity)
 
 
 // product 
@@ -73,10 +73,10 @@ user_route.get('/banner-product-detail/:id', productController.bannerproduct_det
 
 // whish list 
 user_route.get('/wihshlist', auth.isLogin, wishlistController.wishlist);
-user_route.get('/add-wishlist/:id', wishlistController.add);
-user_route.get('/add-wishlist-bannerproduct/:id', wishlistController.addBannerProduct);
-user_route.get('/wihshlist/remove/:id', wishlistController.remove);
-user_route.get('/wihshlist/remove-banner/:id', wishlistController.remove_bannerItem);
+user_route.get('/add-wishlist/:id',auth.isLogin, wishlistController.add);
+user_route.get('/add-wishlist-bannerproduct/:id',auth.isLogin, wishlistController.addBannerProduct);
+user_route.get('/wihshlist/remove/:id',auth.isLogin, wishlistController.remove);
+user_route.get('/wihshlist/remove-banner/:id',auth.isLogin, wishlistController.remove_bannerItem);
 
 // checkout 
 user_route.get('/cart/checkout', auth.isLogin, checkoutCotroller.checkout)

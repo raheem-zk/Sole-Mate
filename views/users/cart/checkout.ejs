@@ -283,10 +283,7 @@
             success: function (response) {
 
               if (response.response.viewRazorpay) {
-                console.log(response);
-                console.log(response.response.newOrder,'jkjjk');
-
-                razorpayPaymentt(response.response.order ,response.response.newOrder);
+                razorpayPaymentt(response.response.order ,response.response.newOrder ,response.response.key_id);
               } else if ( response.response.COD || response.response.wallet) {
                 location.href = '/ordersuccess';
               } else if (response.response.wrong){
@@ -298,16 +295,18 @@
             error: function (xhr, status, error) {
               // Handle the error response
               console.log(error);
+              swal({
+                text: "Something Wrong",
+              });
             }
           });
         });
       });
 
 
-      function razorpayPaymentt(order, newOrder) {
-        console.log('dddddd',order,'dddddddd');
+      function razorpayPaymentt(order, newOrder, KEY_ID) {
         var options = {
-          "key": "rzp_test_l6LMVLbOZ1SY8C", // Enter the Key ID generated from the Dashboard
+          "key": KEY_ID, // Enter the Key ID generated from the Dashboard
           "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
           "currency": "INR",
           "name": "Sole Mate", //your business name
@@ -355,12 +354,15 @@
           },
           method: 'post',
           success: (response) => {
-            console.log('verrrrrrrr');
-            console.log(response + "true");
+            // console.log(response + "true");
             if (response.status) {
               location.href = '/ordersuccess'
             } else if (response.failed) {
               console.log("failed");
+              swal({
+                text: "Something Wrong",
+              });
+              location.href = '/'
             }
           }
         })

@@ -2,10 +2,11 @@ const Admin = require('../../models/admin/adminModel');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 
+require('dotenv').config();
 
-const accountSid = "AC29339501ecb7c3d8e720e760c87a140b";
-const authToken = '7007d337e7eef3575ce894f0e8bd2b43';
-const verifySid = "VAd63db7efbcad55aba171739df92b7a17";
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const verifySid = process.env.VERIFYSID;
 const client = require("twilio")(accountSid, authToken);
 
 const userSchema = require('../../models/user/userModel');

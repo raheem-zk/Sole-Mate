@@ -62,7 +62,7 @@
                                                     <td><%= item.date.toLocaleDateString()%></td>
                                                     <td><%= item.userId.email%></td>
                                                     <td><%= item.paymentType%></td>
-                                                    <td>
+                                                    <td  id="status-<%=item.orderId%>">
                                                       
                                                         <% if (item.status=='delivered' ){ %>
                                                             <p class="text-success"><%=item.status%></p>
@@ -71,16 +71,16 @@
                                                         <% }%>
                                                     </td>
                                                    
-                                                      <td>
+                                                      <td  id="action-<%=item.orderId%>">
                                                         <% if (item.status === 'pending') { %>
                                                           <div class="dropdown">
                                                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                               <%= item.status %>
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                              <a class="dropdown-item" href="/admin/dashboard/order/action/?orderId=<%= item.orderId %>&action=processing">Processing</a>
-                                                              <a class="dropdown-item" href="/admin/dashboard/order/action/?orderId=<%= item.orderId %>&action=shipped">Shipped</a>
-                                                              <a class="dropdown-item" href="/admin/dashboard/order/action/?orderId=<%= item.orderId %>&action=delivered">Delivered</a>
+                                                              <a class="dropdown-item" onclick="orderAction('<%= item.orderId%>','processing')">Processing</a>
+                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','shipped')">Shipped</a>
+                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','delivered')">Delivered</a>
                                                             </div>
                                                           </div>
                                                         <% } else if (item.status === 'processing') { %>
@@ -89,8 +89,8 @@
                                                               <%= item.status %>
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                              <a class="dropdown-item" href="/admin/dashboard/order/action/?orderId=<%= item.orderId %>&action=shipped">Shipped</a>
-                                                              <a class="dropdown-item" href="/admin/dashboard/order/action/?orderId=<%= item.orderId %>&action=delivered">Delivered</a>
+                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','shipped')">Shipped</a>
+                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','delivered')">Delivered</a>
                                                             </div>
                                                           </div>
                                                         <% } else if (item.status === 'shipped') { %>
@@ -99,7 +99,7 @@
                                                               <%= item.status %>
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                              <a class="dropdown-item" href="/admin/dashboard/order/action/?orderId=<%= item.orderId %>&action=delivered">Delivered</a>
+                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','delivered')">Delivered</a>
                                                             </div>
                                                           </div>
                                                         <% } else if (item.status === 'Returned') { %>
@@ -108,8 +108,8 @@
                                                               Refund request
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                              <a class="dropdown-item" href="/admin/dashboard/order/action/?orderId=<%= item.orderId %>&action=refunded">Refund</a>
-                                                              <a class="dropdown-item" href="/admin/dashboard/order/action/?orderId=<%= item.orderId %>&action=norefund">No Refund</a>
+                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','refunded')">Refund</a>
+                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','norefund')">No Refund</a>
                                                             </div>
                                                           </div>
                                                         <% } %>
@@ -119,6 +119,10 @@
                                                     </td>
                                                 </tr>
                                             <% })%>
+                                        <% } else {%>
+                                          <tr>
+                                            <td>0 order !</td>
+                                          </tr>
                                         <% }%>                                        
                                     </tbody>
                                 </table>
@@ -183,6 +187,18 @@
         $(document).ready(function () {
         $('#example').DataTable();
     });
+    </script>
+    <script>
+      function orderAction(id, action){
+        $.ajax({
+          url:`/admin/dashboard/order/action/?orderId=${id}&action=${action}`,
+          method: 'get',
+          success:(response)=>{
+            $(`#status-${id}`).load(`/admin/dashboard/order #status-${id}`);
+            $(`#action-${id}`).load(`/admin/dashboard/order #action-${id}`);
+          }
+        })
+      }
     </script>
 <%- include('../../layouts/admin/footer.ejs') %>
 

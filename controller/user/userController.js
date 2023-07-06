@@ -28,6 +28,7 @@ const home = async (req, res) => {
     let banner = await bannerSchema.find({ status: true, block:false });
     let products = await productSchema.find({ status: true ,block: false}).limit(12);
     const category = await categorySchema.find({status: true});
+    
     const coupon = await couponSchema.find({ status: 'Active' });
     const offers = await offerSchema.find({ status: 'Active' })
       .populate({

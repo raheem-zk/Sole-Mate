@@ -318,7 +318,8 @@ if (data.discount.length> 0) {
           if (err){
             return res.json({ response: {wrong : 'erro for payment side'}})
           }
-          res.json({ response: { viewRazorpay: true, order ,newOrder} });
+          
+          res.json({ response: { viewRazorpay: true, order ,newOrder,key_id} });
         });
       } else if (newOrder.paymentType =='wallet'){
         if (newOrder.total <= data.wallet ){
