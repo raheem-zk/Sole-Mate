@@ -29,7 +29,7 @@
                     <td><%= index + 1%></td>
                     <td><%= item.orderId%></td>
                     <td><%= item.date.toLocaleDateString()%></td>
-                    <td><%= item.total%></td>
+                    <td><%= item.total.toFixed(2) %></td>
                     <td><%= item.paymentType%></td>
                     <td>
                         <% if (item.status == 'pending') { %>

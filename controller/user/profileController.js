@@ -6,10 +6,13 @@ const categorySchema = require('../../models/admin/categoryModel');
 const productSchema = require('../../models/admin/productModel');
 const bannerSchema = require('../../models/admin/bannerModel');
 
-const accountSid = "AC29339501ecb7c3d8e720e760c87a140b";
-const authToken = '7007d337e7eef3575ce894f0e8bd2b43';
-const verifySid = "VAd63db7efbcad55aba171739df92b7a17";
+require('dotenv').config();
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const verifySid = process.env.VERIFYSID;
 const client = require("twilio")(accountSid, authToken);
+
+
 const bcrypt = require('bcrypt');
 
 const profile = async (req, res)=>{
@@ -87,11 +90,7 @@ const getData = async (req, res) =>{
           currentPassword = req.body.current_password;
           newPassword = req.body.new_password;
           confirmPassword = req.body.confirm_password;
-            console.log(currentPassword,'curent password');
-            console.log(newPassword,'new password');
-            console.log(confirmPassword,'confirm password');
           const compare = await bcrypt.compare(currentPassword, userData.password);
-          console.log(compare)
           if (!compare) {
             return res.render('profile/edit_profile', { message: 'Incorrect password', category, loged });
           }
@@ -106,7 +105,6 @@ const getData = async (req, res) =>{
     
           const hashedPassword = await bcrypt.hash(newPassword, 10);
           data.newPassword = hashedPassword;
-          console.log('new password hashed ', data.newPassword,';;;;all dada ', data);
         }
         
         await client.verify.v2
@@ -118,45 +116,47 @@ const getData = async (req, res) =>{
     }
 }
 
-const otpVerification  = async (req, res)=>{
-    try {
-        let userData = {
-            name: req.body.name,
-            mobileNumber: req.body.mobileNumber,
-            email: req.body.email,
-        }
-        if (req.body.newPassword){
-            userData.password = req.body.newPassword;
-        }
-        const otpCode = req.body.otp;
-        client.verify.v2
-        .services(verifySid)
-        .verificationChecks.create({ to: `+91${userData.mobileNumber}`, code: otpCode })
-        .then((verification_check) => {
-          if (verification_check.status === "approved") {
-            // OTP verification successful
-            console.log(verification_check.status);
-            userSchema.updateOne({userId : req.session.userId}, userData)
-              .then(() => {
-                return res.redirect('/profile');
-              })
-              .catch((error) => {
-                console.log(error);
-                // Handle error during user creation
-                return res.redirect('/profile');
-              });
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          // Handle error during OTP verification
-          res.render('404');
-  
-        });
-    } catch (error) {
-        console.log(error);
+const otpVerification = async (req, res) => {
+  try {
+    const userData = {
+      name: req.body.name,
+      mobileNumber: req.body.mobileNumber,
+      email: req.body.email,
+    };
+
+    if (req.body.newPassword) {
+      userData.password = req.body.newPassword;
     }
-}
+
+    const otpCode = req.body.otp;
+
+    client.verify
+      .services(verifySid)
+      .verificationChecks.create({ to: `+91${userData.mobileNumber}`, code: otpCode })
+      .then((verification_check) => {
+        if (verification_check.status === "approved") {
+          // OTP verification successful
+          userSchema
+            .updateOne({ userId: req.session.userId }, userData)
+            .then(() => {
+              return res.json({ success: true });
+            })
+            .catch((error) => {
+              return res.json({ success: true });
+            });
+        } else {
+          return res.json({ error: 'wrong otp' });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        return res.json({ error: 'Please try later' });
+      });
+  } catch (error) {
+    console.log(error);
+    return res.render('404');
+  }
+};
 
 
 const manage_address = async (req, res)=>{
@@ -173,7 +173,6 @@ const manage_address = async (req, res)=>{
 const add_address = async (req, res)=>{
   try {
     const category = await categorySchema.find({status: true});
-
     res.render('profile/add_address',{  message:'', category, loged:true})
   } catch (error) {
     console.log(error);
@@ -199,7 +198,10 @@ const get_address = async (req, res) => {
       return res.render('profile/add_address', { message: 'Please fill all the fields' ,category, loged:true});
     }
     if (data.phone.length != 10) {
-      return res.render('profile/add_address', { message: 'Please fill all the fields' ,category, loged:true});
+      return res.render('profile/add_address', { message: 'Mobile Number is incurect' ,category, loged:true});
+    }
+    if(data.pincode.length !=6){
+      return res.render('profile/add_address', { message: 'Please enter the curect pincode' ,category, loged:true});
     }
     await userSchema.updateOne({ userId: req.session.userId }, { $push: { address: [data] } });
     return res.redirect('/profile/manage-address');
@@ -230,7 +232,6 @@ const edit_address = async (req, res) =>{
 const update_address = async (req, res)=>{
   try {
     const category = await categorySchema.find({status: true});
-
     let data = {
       name: req.body.name,
       housename: req.body.housename,
@@ -241,21 +242,22 @@ const update_address = async (req, res)=>{
       country: req.body.country,
       phone: req.body.number
     }
+
     const addressId = req.body.addressId;
     if (!req.body.name || !req.body.street || !req.body.state || !req.body.pincode || !req.body.housename || !req.body.district || !req.body.country || !req.body.number) {
-      return res.render('profile/add_address', { message: 'Please fill all the fields' ,category, loged: true});
+      return res.json({message:'Please fill all the fields'});
     }
     if (data.phone.length != 10) {
-      return res.render('profile/add_address', { message: 'Please fill all the fields' ,category, loged: true});
+      return res.json({message:'Mobile Number is incurect'});
     }
-    // let result = await userSchema.updateOne({userId : req.session.userId , 'address._id' : addressId}, {'address._id': addressId ,{$set: data}}})
+    if(data.pincode.length !=6){
+      return res.json({message:'Please enter the curect pincode'});
+    }
     let result = await userSchema.updateOne(
       { userId: req.session.userId, 'address._id': addressId },
       { $set: { 'address.$': data } }
     );
-    // res.send(result);
-    console.log(result);
-    return res.redirect('/profile/manage-address');
+    return res.json({success:true});
   } catch (error) {
     console.log(error);
   }
@@ -269,7 +271,6 @@ const remove = async (req, res)=>{
       { $pull: { address: { _id: addressId } } }
     );
     console.log(result);
-    // res.send(addressId);
     return res.redirect('/profile/manage-address');
   } catch (error) {
     console.log(error);
@@ -281,7 +282,6 @@ const my_orders = async (req, res)=>{
     const category = await categorySchema.find({status: true});
 
     const orderData = await orderSchema.find({userId : req.session.userId});
-    // console.log(orderData);
     let loged=false;
     if(req.session.userId){
       loged = true;
@@ -310,11 +310,9 @@ const order_detail = async (req, res) =>{
       localField: 'product.bannerId',
       foreignField: 'bannerId'
   });
-    // console.log(data)
     let product =[], banner=[];
     if (data.product.length> 0 ){
       data.product.forEach((x)=>{
-        console.log(x);
         if (x.bannerId){
           banner.push(x);
         }else if (x.productId){
@@ -322,12 +320,10 @@ const order_detail = async (req, res) =>{
         }
       })
     }
-    console.log('start',banner, 'balllllllllll, ', product)
     let loged=false;
     if(req.session.userId){
       loged = true;
     }
-    // res.send(banner)
     res.render('profile/order_detail',{ banner, product , data, category, loged});
   } catch (error) {
     console.log(error);
@@ -353,7 +349,6 @@ const order_action = async (req, res)=>{
           localField: 'product.bannerId',
           foreignField: 'bannerId'
       })
-    // console.log('dkkdkd', order.total, 'dataaaa');
     const total = order.total;
   
     if (paymentType !== 'COD' && action === 'cancel') {
@@ -369,34 +364,20 @@ const order_action = async (req, res)=>{
         const productId = item.productId._id;
         const quantity = item.quantity;
     
-        // Update product stock
         const productUpdateResult = await productSchema.updateOne(
           { _id: productId },
           { $inc: { stock: quantity } }
         );
-    
-        if (productUpdateResult.modifiedCount === 0) {
-          console.log(`Product stock update failed for product ID: ${productId}`);
-        } else {
-          console.log(`Product stock updated successfully for product ID: ${productId}`);
-        }
       }
     
       if (item.bannerId) {
         const bannerId = item.bannerId._id;
         const quantity = item.quantity;
     
-        // Update banner stock
         const bannerUpdateResult = await bannerSchema.updateOne(
           { _id: bannerId },
           { $inc: { stock: quantity } }
         );
-    
-        if (bannerUpdateResult.modifiedCount === 0) {
-          console.log(`Banner stock update failed for banner ID: ${bannerId}`);
-        } else {
-          console.log(`Banner stock updated successfully for banner ID: ${bannerId}`);
-        }
       }
     });
 

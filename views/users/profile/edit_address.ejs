@@ -162,8 +162,9 @@
                                 <div class="form-group">
                                     <input type="number" minlength="10" maxlength="10" name="number" class="form-control" placeholder="Your Phone *" value="<%=address.phone%>" />
                                 </div>
+                                <p id="responseMessage" class="text-center text-danger"></p>
                                 <p class="text-danger"><%=message%></p>
-                                <button class="btnRegister" type="submit">Register</button>
+                                <button onclick="editAddress()" class="btnRegister" type="button">Register</button>
                             </div>
                         </div>
                     </form>
@@ -172,3 +173,26 @@
         </div>
     </div>
 </div>
+<%-include('../../layouts/user/footer.ejs')%>
+
+<script>
+    function editAddress(){
+        event.preventDefault();
+
+    // Retrieve form data
+    var formData = $('form').serialize();
+      $.ajax({
+        url:'/profile/manage-address/edit-address',
+        method:'post',
+        data:formData,
+        success:(response)=>{
+            console.log(response);
+            if (response.message){
+                $('#responseMessage').text(response.message);
+            } else if (response.success){
+                window.location.href = '/profile/manage-address';
+            }
+        }
+      })
+    }
+  </script>

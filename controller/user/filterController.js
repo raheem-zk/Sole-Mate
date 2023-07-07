@@ -48,8 +48,6 @@ const all_products = async (req, res)=>{
           const size = Math.ceil(productsSize / limit);
           return res.render('filter/all_products', { products, category, coupon, size, page, loged, offers ,productOffer});
         }
-        console.log(page)
-        console.log(req.query);
         if(req.query.search){
           let value = req.query.search.trim();
           const limit = 8;
@@ -67,12 +65,6 @@ const all_products = async (req, res)=>{
         if (req.query.category){
             const categoryId = req.query.category;
             const products = await productSchema.find({ category: categoryId ,status: true, block:false })
-            // .populate({
-            //     path: 'category',
-            //     model: 'category',
-            //     localField: 'category',
-            //     foreignField: 'categoryId',
-            //   })
               .skip(skip)
               .limit(limit);
               let productsSize = await productSchema.countDocuments({ category: categoryId , status: true, block:false })
@@ -105,12 +97,6 @@ const category_filter = async (req, res)=>{
         const productOffer = await productOfferSchema.find({status:'Active'});
 
         const products = await productSchema.find({ category: categoryId ,status: true, block:false })
-        // .populate({
-        //     path: 'category',
-        //     model: 'category',
-        //     localField: 'category',
-        //     foreignField: 'categoryId'
-        //   });
           const offers = await offerSchema.find({status:'Active'})
           .populate({
             path: 'category',
@@ -128,10 +114,8 @@ const category_filter = async (req, res)=>{
 
 const search = async (req, res) => {
     try {
-      console.log(req.body.search);
       let payload = req.body.search.trim();
       let searchResults = await productSchema.find({status: true, block:false , name: { $regex: new RegExp('^'+payload+'.*', 'i') } }).limit(10).exec();
-      console.log(searchResults);
       res.json({ payload: searchResults });
     } catch (error) {
       console.log(error);

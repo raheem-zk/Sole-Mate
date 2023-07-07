@@ -18,7 +18,6 @@ const wishlist = async (req, res) => {
             localField: 'wishlist.bannerproduct',
             foreignField: 'bannerId'
         })
-        // console.log(wishlists);
         let loged = false;
         if(req.session.userId){
           loged = true;
@@ -97,10 +96,10 @@ const remove_bannerItem = async (req, res) =>{
         },{
             $pull : { wishlist: { bannerproduct: productId}}
         }).then((result)=>{
-            console.log('jk',result,'remove banner product in wishlist')
+            // console.log('jk',result,'remove banner product in wishlist')
         })
         .catch((err)=>{
-            console.log(err,'banner product remove in wishlist');
+            console.log(err);
         })
         let userData = await userSchema.findOne({userId: req.session.userId});
         if(userData.wishlist.length  == 0){

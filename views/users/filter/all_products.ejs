@@ -365,7 +365,7 @@ function searchData(){
 	})
 }
 function all_products(){
-	low= high='' ;
+	this.low= this.high= this.category= this.priceLow= this.searchValue='' ;
 	$.ajax({
 		url:`/all_products`,
 		method:'get',

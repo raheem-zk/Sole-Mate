@@ -39,7 +39,6 @@ user_route.post('/forgot-password', userController.getNumber)
 user_route.post('/forgot-otp', userController.verifyOtp)
 user_route.post('/reset-password', userController.reset_password)
 
-
 // user_prifile
 user_route.get('/profile', auth.isLogin, profileController.profile);
 user_route.get('/profile/edit', auth.isLogin, profileController.edit);
@@ -65,11 +64,9 @@ user_route.get('/cart', cartController.cart);
 user_route.get('/cart/banner-quantity/', cartController.quntity)
 user_route.get('/cart/product-quantity/', cartController.productquntity)
 
-
 // product 
 user_route.get('/product-detail/:id', productController.product_detail);
 user_route.get('/banner-product-detail/:id', productController.bannerproduct_detail);
-
 
 // whish list 
 user_route.get('/wihshlist', auth.isLogin, wishlistController.wishlist);
@@ -84,13 +81,10 @@ user_route.post('/cart/checkout', checkoutCotroller.order)
 user_route.post('/verifyPayment', checkoutCotroller.verifyPayment)
 user_route.get('/ordersuccess', auth.isLogin, checkoutCotroller.ordersuccess)
 
-
 user_route.get('/cart/checkout/conformation', auth.isLogin, checkoutCotroller.confrmation)
 user_route.get('/cart/checkout/add-address', auth.isLogin, checkoutCotroller.add_address)
 user_route.post('/cart/checkout/add-address', checkoutCotroller.get_address)
-
 user_route.post('/cart/checkout/apply_coupon', checkoutCotroller.applay_coupon)
-
 
 // category fillter
 user_route.get('/all_products', filterController.all_products)

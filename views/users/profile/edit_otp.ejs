@@ -1,26 +1,81 @@
 <%-include('../../layouts/user/header.ejs')%>
 
 
-<div class="container height-100 d-flex justify-content-center align-items-center m-5">
-    <div class="position-relative m-5">
-        <div class="card p-2 text-center m-3">
-            <form action="/profile/edit/otp" method="post">
-            <h6 class="text-danger">Please enter the one time password <br> to verify your account</h6>
-            <div> <span>A code has been sent to</span> <small>+91 <%=data.mobileNumber%></small> </div>
 
-                    <input type="hidden" name="name" value="<%=data.name%>">
-                    <input type="hidden" name="mobileNumber" value="<%=data.mobileNumber%>">
-                    <input type="hidden" name="data.email" value="<%=data.email%>">
-                    <% if (data.newPassword){ %>
-                    <input type="hidden" name="newPassword" value="<%=data.newPassword%>">
-                    <% } %>
-                    <input class="m-2 text-center form-control rounded" id="sixth" type="number" name="otp" maxlength="6">
-            <div class="mt-4"> <button type="submit" class="btn btn-danger px-4 validate ">Validate</button> </div>
-        </form>
+
+<div class="container pt-5 mt-5">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-md-9 ml-5 pl-5">
+                            <div class="p-5 ml-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-2">OTP Verification</h1>
+                                    <p class="mb-4">Please enter the one-time password<br>to verify your account
+                                        A code has been sent to</p>
+                                    <small>+91 <%=data.mobileNumber%></small>
+
+                                </div>
+                                <form class="user" method="post" action="/profile/edit/otp">
+                                    <input type="hidden" name="name" value="<%=data.name%>">
+                                    <input type="hidden" name="mobileNumber" value="<%=data.mobileNumber%>">
+                                    <input type="hidden" name="data.email" value="<%=data.email%>">
+                                    <% if (data.newPassword){ %>
+                                    <input type="hidden" name="newPassword" value="<%=data.newPassword%>">
+                                    <% } %>
+                                    <div class="form-group">
+
+                                        <input  name="otp" maxlength="6" type="number" class="text-center form-control form-control-user"
+                                            id="exampleInputEmail" aria-describedby="emailHelp"
+                                            placeholder="X X X X X X" >
+                                    </div>
+                                    <p id="responseMessage" class="text-center text-danger"></p>
+                                    <button type="button" onclick="otpVerification()" class="btn btn-primary btn-user btn-block" >Validate</button>
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>
+
 </div>
 
 
 <%-include('../../layouts/user/footer.ejs')%>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+function otpVerification() {
+    event.preventDefault();
+
+    // Retrieve form data
+    var formData = $('form.user').serialize();
+    console.log(formData);
+
+    $.ajax({
+        url: '/profile/edit/otp',
+        method: 'post',
+        data: formData,
+        success: function(response) {
+            if (response.error){
+                $('#responseMessage').text(response.error);
+            }else if (response.success){
+                window.location.href = '/profile';
+            }
+        }
+    });
+}
+
+</script>

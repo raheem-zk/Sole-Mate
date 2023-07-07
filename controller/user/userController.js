@@ -11,9 +11,6 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const verifySid = process.env.VERIFYSID;
 const client = require("twilio")(accountSid, authToken);
 
-
-
-// const client = require("twilio")(process.env.accountSid, process.env.authToken);
 const mongoose = require('mongoose');
 const productSchema = require('../../models/admin/productModel');
 const bannerSchema = require('../../models/admin/bannerModel');
@@ -25,10 +22,9 @@ const productOfferSchema = require('../../models/admin/product_offerModel');
 // home page
 const home = async (req, res) => {
   try {
-    let banner = await bannerSchema.find({ status: true, block:false });
-    let products = await productSchema.find({ status: true ,block: false}).limit(12);
-    const category = await categorySchema.find({status: true});
-    
+    let banner = await bannerSchema.find({ status: true, block: false });
+    let products = await productSchema.find({ status: true, block: false }).limit(12);
+    const category = await categorySchema.find({ status: true });
     const coupon = await couponSchema.find({ status: 'Active' });
     const offers = await offerSchema.find({ status: 'Active' })
       .populate({
@@ -52,7 +48,6 @@ const home = async (req, res) => {
 const loadRegister = async (req, res) => {
   try {
     res.render('registration', { message: '' })
-    // res.render('register-otp')
   } catch (error) {
     console.log(error);
     res.render('404');
@@ -90,9 +85,7 @@ const insertUser = async (req, res) => {
     }
     if (req.body.referral_code) {
       let referral_code = req.body.referral_code.trim();
-      console.log(referral_code,'...refral')
       let result = await userSchema.findOne({ referral_code: referral_code });
-      console.log(result)
       if (!result) {
         return res.render('registration', { message: 'Invalid referral code!' });
       } else {
@@ -111,50 +104,52 @@ const insertUser = async (req, res) => {
 }
 
 const registerotp = async (req, res) => {
-  let otpCode = req.body.otp;
-  const userId = new mongoose.Types.ObjectId();
-  const referral_code = referralCodes.generate(); // Generate a random referral code
+  try {
+    let otpCode = req.body.otp;
+    const userId = new mongoose.Types.ObjectId();
+    const referral_code = referralCodes.generate(); // Generate a random referral code
 
-  let userData = {
-    userId: userId,
-    name: req.body.name,
-    mobileNumber: req.body.mobile,
-    email: req.body.email,
-    password: req.body.password,
-    referral_code: referral_code[0],
-  };
-  if (req.body.parentReferral){
-    var parentReferral = req.body.parentReferral;
-    userData.wallet = 100;
+    let userData = {
+      userId: userId,
+      name: req.body.name,
+      mobileNumber: req.body.mobile,
+      email: req.body.email,
+      password: req.body.password,
+      referral_code: referral_code[0],
+    };
+    if (req.body.parentReferral) {
+      var parentReferral = req.body.parentReferral;
+      userData.wallet = 100;
+    }
+
+    client.verify.v2
+      .services(verifySid)
+      .verificationChecks.create({ to: `+91${userData.mobileNumber}`, code: otpCode })
+      .then((verification_check) => {
+        if (verification_check.status === "approved") {
+          User.create(userData)
+            .then(async () => {
+              if (parentReferral) {
+                await userSchema.updateOne({ referral_code: parentReferral }, { $inc: { wallet: 130 } });
+              }
+              return res.json({ success: true })
+            })
+            .catch((error) => {
+              console.log(error);
+              return res.json({ error: true });
+            });
+        } else {
+          return res.json({ message: 'OTP is wrong please enter curect otp' })
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        return res.json({ message: 'Please try later' });
+      });
+  } catch (error) {
+    console.log(error);
+    return res.render('404');
   }
-
-  client.verify.v2
-    .services(verifySid)
-    .verificationChecks.create({ to: `+91${userData.mobileNumber}`, code: otpCode })
-    .then((verification_check) => {
-      if (verification_check.status === "approved") {
-        // OTP verification successful
-        console.log(verification_check.status);
-        User.create(userData)
-          .then(async () => {
-            if(parentReferral){
-              await userSchema.updateOne({referral_code: parentReferral}, {$inc : { wallet : 130 }});
-            }
-            return res.redirect('/login');
-          })
-          .catch((error) => {
-            console.log(error);
-            // Handle error during user creation
-            return res.redirect('/register');
-          });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      // Handle error during OTP verification
-      res.render('404');
-
-    });
 };
 
 //login page
@@ -185,8 +180,6 @@ const verifyLogin = async (req, res) => {
 
         if (compare) {
           req.session.userId = result.userId;
-          console.log('user _id', result._id);
-          console.log(req.session.userId, 'session id ');
           return res.redirect('/');
         } else {
           return res.render('login', { message: 'Incorrect password' });
@@ -205,7 +198,7 @@ const verifyLogin = async (req, res) => {
 
 const forgot_password = async (req, res) => {
   try {
-    res.render('forgot-password', { message: ''});
+    res.render('forgot-password', { message: '' });
   } catch (error) {
     console.log(error);
   }
@@ -218,11 +211,10 @@ const getNumber = async (req, res) => {
     if (!mobileNumber) {
       return res.render('forgot-password', { message: 'Please Enter your mobile number' });
     }
-    if(mobileNumber.length !==10){
+    if (mobileNumber.length !== 10) {
       return res.render('forgot-password', { message: 'Please Enter your curect mobile number' });
     }
     let userData = await userSchema.findOne({ mobileNumber: mobileNumber });
-    console.log(userData);
     if (!userData) {
       return res.render('forgot-password', { message: 'Invalide Moble Number' });
     }
@@ -244,16 +236,14 @@ const verifyOtp = async (req, res) => {
       .verificationChecks.create({ to: `+91${number}`, code: otpCode })
       .then((verification_check) => {
         if (verification_check.status === "approved") {
-          // OTP verification successful
-          console.log(verification_check.status);
-          // return res.send(number)
           return res.render('reset_password', { number, message: '' });
+        } else {
+          return res.render('forgot-password', { message: 'The OTP is not correct. Please try again.' });
         }
       })
       .catch((error) => {
         console.log(error);
-        // Handle error during OTP verification
-        res.render('404');
+        res.render('500', { statusCode: 500 });
 
       });
   } catch (error) {
@@ -266,7 +256,7 @@ const reset_password = async (req, res) => {
     const number = req.body.number;
     const newPassword = req.body.newPassword;
     const ConformPassword = req.body.ConformPassword;
-    if (newPassword.length < 6){
+    if (newPassword.length < 6) {
       return res.render('reset_password', { number, message: 'Please enter a strong password' })
     }
     if (newPassword != ConformPassword) {
@@ -282,9 +272,7 @@ const reset_password = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    // console.log(req.session)
     req.session.userId = null;
-    // console.log(req.session);
     res.redirect('/')
   } catch (error) {
     console.log(error);
@@ -304,14 +292,12 @@ const verify_number = async (req, res) => {
   try {
     const number = req.body.number;
     const userFind = await userSchema.findOne({ mobileNumber: number })
-    console.log(userFind,'user finded ...')
     if (!userFind) {
       return res.json({ response: { error: "User not found" } });
     }
     await client.verify.v2
       .services(verifySid)
       .verifications.create({ to: `+91${number}`, channel: "sms" });
-    console.log(number)
     return res.json({ response: { success: 'success' } })
   } catch (error) {
     console.log(error);
@@ -319,25 +305,19 @@ const verify_number = async (req, res) => {
 }
 
 
-// req.session.userId = result.userId;
 
 const verify_otp = async (req, res) => {
   try {
     const otpCode = req.body.otp;
     const number = req.body.number;
-    console.log(req.body);
-    console.log(number, 'number.....')
+   
     client.verify.v2
       .services(verifySid)
       .verificationChecks.create({ to: `+91${number}`, code: otpCode })
       .then(async (verification_check) => {
         if (verification_check.status === "approved") {
-          // OTP verification successful
-          console.log(verification_check.status);
           const userId = await userSchema.findOne({ mobileNumber: number }, { userId: 1, _id: 0 });
-          console.log(userId, 'dkl')
           req.session.userId = userId.userId;
-          console.log(req.session.userId);
           return res.json({ response: { success: true } })
         } else {
           return res.json({ response: { error: true } });
@@ -362,5 +342,5 @@ module.exports = {
   reset_password,
   login_with_number,
   verify_number,
-  verify_otp
+  verify_otp,
 }

@@ -54,7 +54,7 @@ app.use((err, req, res, next) => {
   if (err.statusCode == 404) {
     return res.render('users/404');
   }
-  res.statusCode = res.statusCode || 500;
+  res.statusCode = 500;
   return res.render('users/500', { statusCode: res.statusCode });
 });
 

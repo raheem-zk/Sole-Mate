@@ -26,7 +26,8 @@
                             <input id="sixth" type="number" name="otp" maxlength="6" class="form-control w-50 text-center" placeholder="X X X X X X" onfocus="this.placeholder = ''" onblur="this.placeholder = 'X X X X X X'">
                         </div>                        
                         <div class="mt-4">
-                            <button type="submit" value="submit" class="primary-btn">Validate</button>
+                            <p id="responseMessage" class="text-center text-danger"></p>
+                            <button type="button" onclick="otpVerification()" class="primary-btn">Validate</button>
                         </div>
                     </form>
                 </div>
@@ -38,4 +39,29 @@
 
 <%-include('../layouts/user/footer.ejs')%>
 
+<script>
+    function otpVerification() {
+    event.preventDefault();
+
+    // Retrieve form data
+    var formData = $('form[action="/register-otp"]').serialize();
+    console.log(formData);
+
+    $.ajax({
+        url: '/register-otp',
+        method: 'post',
+        data: formData,
+        success: function(response) {
+            console.log(response);
+            if (response.error){
+                window.location.href = '/register';
+            }else if (response.success){
+                window.location.href = '/login';
+            } else if (response.message){
+                $('#responseMessage').text(response.message);
+            }
+        }
+    });
+}
+</script>
 

@@ -106,22 +106,6 @@ const add = async (req, res) => {
             { $inc: { cartTotalPrice: productData.price } }
           );
         }
-
-        // if (offerMatch) { 
-        //  let offerPrice = (productData.price* offerMatch.discountPercentage)/100
-        //  await gest_userSchema.updateOne(
-        //   { gestId: req.session.gest_user },
-        //   { $inc: { cartTotalPrice: offerPrice } }
-        // );
-        // } else{ 
-        //   await gest_userSchema.updateOne(
-        //     { gestId: req.session.gest_user },
-        //     { $inc: { cartTotalPrice: productData.price } }
-        //   );
-        // } 
-
-
-
         return res.json({ response: 'success' });
       }
     }
@@ -133,7 +117,6 @@ const add = async (req, res) => {
         return res.json({ response: 'success' });
       }
 
-
       const result = await userSchema.updateOne(
         { userId: req.session.userId },
         { $push: { cart: { product: productId } } }
@@ -141,7 +124,6 @@ const add = async (req, res) => {
 
       const productData = await productSchema.findOne({ productId: productId });
       const userData = await userSchema.findOne({ userId: req.session.userId });
-
 
       let proOfferMatch = productOffer.find((x) => x.product_name.equals(productData.productId));
       let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category));
@@ -169,22 +151,6 @@ const add = async (req, res) => {
           { $inc: { cartTotalPrice: productData.price } }
         );
       }
-
-      //offer checking and add the off incom 
-      // let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category)); 
-      // if (offerMatch) { 
-      //  let offerPrice = (productData.price* offerMatch.discountPercentage)/100
-      //  await userSchema.updateOne(
-      //   { userId: req.session.userId },
-      //   { $inc: { cartTotalPrice:  offerPrice } }
-      // );
-      // } else{ 
-      //   await userSchema.updateOne(
-      //     { userId: req.session.userId },
-      //     { $inc: { cartTotalPrice:  productData.price } }
-      //   );
-      // } 
-
       if (result.nModified === 1) {
         return res.json({ response: 'success' });
       } else {
@@ -195,7 +161,7 @@ const add = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    // return res.json({ response: 'An error occurred' });
+    return res.json({ response: 'An error occurred' });
   }
 };
 
@@ -213,7 +179,6 @@ const bannerproduct = async (req, res) => {
 
     if (!req.session.userId) {
       const productData = await bannerSchema.findOne({ bannerId: productId });
-
       if (!req.session.gest_user) {
         let gestUserId = new mongoose.Types.ObjectId();
         const newGuestUser = {
@@ -256,21 +221,6 @@ const bannerproduct = async (req, res) => {
             { $inc: { cartTotalPrice: productData.price } }
           );
         }
-
-        // let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category)); 
-        // if (offerMatch) { 
-        //  let offerPrice = (productData.price* offerMatch.discountPercentage)/100
-        //  await gest_userSchema.updateOne(
-        //   { gestId: req.session.gest_user },
-        //   { $inc: { cartTotalPrice: offerPrice } }
-        // );
-        // } else{ 
-        //  await gest_userSchema.updateOne(
-        //    { gestId: req.session.gest_user },
-        //    { $inc: { cartTotalPrice: productData.price } }
-        //  );
-        // } 
-
         return res.json({ response: 'success' });
       } else {
         const existed = await gest_userSchema.findOne(
@@ -312,21 +262,6 @@ const bannerproduct = async (req, res) => {
             { $inc: { cartTotalPrice: productData.price } }
           );
         }
-
-        // let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category)); 
-        // if (offerMatch) { 
-        //  let offerPrice = (productData.price* offerMatch.discountPercentage)/100
-        //  await gest_userSchema.updateOne(
-        //   { gestId: req.session.gest_user },
-        //   { $inc: { cartTotalPrice: offerPrice } }
-        // );
-        // } else{ 
-        //  await gest_userSchema.updateOne(
-        //    { gestId: req.session.gest_user },
-        //    { $inc: { cartTotalPrice: productData.price } }
-        //  );
-        // } 
-
         return res.json({ response: 'success' });
       }
     }
@@ -336,7 +271,6 @@ const bannerproduct = async (req, res) => {
     if (req.session.userId) {
       const existed = await userSchema.findOne({ userId: req.session.userId, 'cart.bannerproduct': productId });
       if (existed) {
-        // return res.redirect('/');
         return res.json({ response: 'success' });
       }
       const result = await userSchema.updateOne(
@@ -345,7 +279,6 @@ const bannerproduct = async (req, res) => {
       );
       const productData = await bannerSchema.findOne({ bannerId: productId });
       const userData = await userSchema.findOne({ userId: req.session.userId });
-      // const total = userData.cartTotalPrice + productData.price;
 
       let proOfferMatch = productOffer.find((x) => x.product_name.equals(productData.productId));
       let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category));
@@ -373,24 +306,6 @@ const bannerproduct = async (req, res) => {
           { $inc: { cartTotalPrice: productData.price } }
         );
       }
-
-
-      // let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category)); 
-      // if (offerMatch) { 
-      //  let offerPrice = (productData.price* offerMatch.discountPercentage)/100
-      //  await userSchema.updateOne(
-      //   { userId: req.session.userId },
-      //   { $inc : { cartTotalPrice: offerPrice } }
-      // );
-      // } else{ 
-      //   await userSchema.updateOne(
-      //     { userId: req.session.userId },
-      //     { $inc : { cartTotalPrice: productData.price } }
-      //   );
-      // } 
-
-
-      console.log('pushed result ', result);
 
       if (result.nModified === 1) {
         return res.json({ response: 'success' });
@@ -459,7 +374,6 @@ const remove = async (req, res) => {
             { gestId: req.session.gest_user },
             { $inc: { cartTotalPrice: -totalPrice } }
           )
-          console.log(result, productData.price);
         }
         await gest_userSchema.updateOne(
           { gestId: req.session.gest_user },
@@ -474,7 +388,6 @@ const remove = async (req, res) => {
       }
     }
 
-
     if (req.session.userId) {
       let user = await userSchema.findOne({ userId: req.session.userId });
       let quantity = user.cart.find(item => item.product == productId);
@@ -483,7 +396,6 @@ const remove = async (req, res) => {
       } else {
         quantity = 0;
       }
-      console.log('the remove product quantity is ::', quantity);
       const productData = await productSchema.findOne({ productId: productId });
       const result = await userSchema.findOne({ userId: req.session.userId });
 
@@ -517,23 +429,6 @@ const remove = async (req, res) => {
           { $inc: { cartTotalPrice: -totalPrice } }
         );
       }
-
-      // let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category)); 
-      // if (offerMatch) { 
-      //  let offerPrice = (productData.price* offerMatch.discountPercentage)/100
-      // let totalPrice = (quantity*offerPrice);
-      // console.log('loged user offer total ==',totalPrice)
-      //  await userSchema.updateOne(
-      //   { userId: req.session.userId },
-      //   { $inc: { cartTotalPrice: -totalPrice } }
-      // );
-      // } else{ 
-      //   let totalPrice = (quantity*productData.price);
-      //   await userSchema.updateOne(
-      //     { userId: req.session.userId },
-      //     { $inc: { cartTotalPrice: -totalPrice } }
-      //   );
-      // } 
 
       await userSchema.updateOne(
         { userId: req.session.userId },
@@ -569,7 +464,6 @@ const removebanner = async (req, res) => {
       if (req.session.gest_user) {
         let gest = await gest_userSchema.findOne({ gestId: req.session.gest_user });
         let quantity = gest.cart.find(item => item.bannerproduct == productId);
-        console.log(quantity, 'banner quantity......');
         if (quantity) {
           quantity = quantity.quantity;
         } else {
@@ -608,22 +502,6 @@ const removebanner = async (req, res) => {
             { $inc: { cartTotalPrice: -totalPrice } }
           );
         }
-
-        // let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category)); 
-        // if (offerMatch) { 
-        //  let offerPrice = (productData.price* offerMatch.discountPercentage)/100
-        // let totalPrice = (quantity*offerPrice);
-        //   await gest_userSchema.updateOne(
-        //     { gestId: req.session.gest_user },
-        //     { $inc: { cartTotalPrice: -totalPrice } }
-        //   );
-        // } else{ 
-        //   let totalPrice = (quantity*productData.price);
-        //   await gest_userSchema.updateOne(
-        //     { gestId: req.session.gest_user },
-        //     { $inc: { cartTotalPrice: -totalPrice } }
-        //   );
-        // }
 
         await gest_userSchema.updateOne(
           { gestId: req.session.gest_user },
@@ -678,23 +556,6 @@ const removebanner = async (req, res) => {
           { $inc: { cartTotalPrice: -totalPrice } }
         );
       }
-
-      // let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category)); 
-      // if (offerMatch) { 
-      //  let offerPrice = (productData.price* offerMatch.discountPercentage)/100
-      // let totalPrice = (quantity*offerPrice);
-      //  await userSchema.updateOne(
-      //   { userId : req.session.userId },
-      //   { $inc: { cartTotalPrice: -totalPrice } }
-      // );
-      // } else{ 
-      //   let totalPrice = (quantity*productData.price);
-      //   await userSchema.updateOne(
-      //     {userId: req.session.userId},
-      //     {$inc : {cartTotalPrice : -totalPrice}}
-      //     );
-      // } 
-
       await userSchema.updateOne(
         { userId: req.session.userId },
         { $pull: { cart: { bannerproduct: productId } } }
@@ -774,7 +635,6 @@ const cart = async (req, res) => {
         let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category));
 
         if (proOfferMatch && offerMatch) {
-          console.log('2')
           let offerPrice = productData.price - ((productData.price * (offerMatch.discountPercentage + proOfferMatch.discountPercentage)) / 100);
           totalPriceUpdate += quantity * offerPrice;
         } else if (proOfferMatch && !offerMatch) {
@@ -863,399 +723,16 @@ const cart = async (req, res) => {
   }
 }
 
-
-// const cart = async (req, res) => {
-//   try {
-//     const category = await categorySchema.find();
-//     const productOffer = await productOfferSchema.find({ status: 'Active' });
-//     const offers = await offerSchema.find({ status: 'Active' })
-//       .populate({
-//         path: 'category',
-//         model: 'category',
-//         localField: 'category',
-//         foreignField: 'categoryId'
-//       });
-//     if (req.session.gest_user && req.session.userId) {
-//       const gestData = await gest_userSchema.findOne({ gestId: req.session.gest_user });
-//       if (gestData.cart && gestData.cart.length > 0) {
-//         const userData = await userSchema.findOneAndUpdate(
-//           { userId: req.session.userId },
-//           {
-//             $push: { cart: { $each: gestData.cart } },
-//             $inc: { cartTotalPrice: gestData.cartTotalPrice }
-//           },
-//           { new: true }
-//         );
-//       }
-//       const deletedUser = await gest_userSchema.findOneAndDelete({ gestId: req.session.gest_user });
-//       req.session.gest_user = null;
-//     }
-//     if (req.session.gest_user && !req.session.userId) {
-//       const gestData = await gest_userSchema.findOne({ gestId: req.session.gest_user }).populate({
-//         path: 'cart.product',
-//         model: 'products',
-//         localField: 'cart.product',
-//         foreignField: 'productId'
-//       })
-//         .populate({
-//           path: 'cart.bannerproduct',
-//           model: 'banner',
-//           localField: 'cart.bannerproduct',
-//           foreignField: 'bannerId'
-//         })
-
-//       let cart = '';
-//       cart = gestData.cart;
-//       await gest_userSchema.updateOne(
-//         { gestId: req.session.gest_user },
-//         { $set: { cartTotalPrice: 0 } }
-//       );
-//       for (const item of cart) {
-//         if (item.product) {
-//           let productId = item.product.productId;
-//           let productData = await productSchema.findOne({ productId: productId });
-//           var quantity = item.quantity;
-//           let proOfferMatch = productOffer.find((x) => x.product_name.equals(productId));
-//           let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category));
-//           if (proOfferMatch && offerMatch) {
-//             let offerPrice = productData.price - ((productData.price * (offerMatch.discountPercentage + proOfferMatch.discountPercentage)) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else if (proOfferMatch && !offerMatch) {
-//             let offerPrice = productData.price - ((productData.price * proOfferMatch.discountPercentage) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else if (offerMatch && !proOfferMatch) {
-//             let offerPrice = productData.price - ((productData.price * offerMatch.discountPercentage) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else {
-//             let totalPrice = (quantity * productData.price);
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           }
-//         } else if(item.bannerproduct){
-//           let productId = item.bannerproduct.bannerId;
-//           let productData = await bannerSchema.findOne({ bannerId: productId });
-//           var quantity = item.quantity;
-//           let proOfferMatch = productOffer.find((x) => x.product_name.equals(productId));
-//           let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category));
-//           if (proOfferMatch && offerMatch) {
-//             let offerPrice = productData.price - ((productData.price * (offerMatch.discountPercentage + proOfferMatch.discountPercentage)) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else if (proOfferMatch && !offerMatch) {
-//             let offerPrice = productData.price - ((productData.price * proOfferMatch.discountPercentage) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else if (offerMatch && !proOfferMatch) {
-//             let offerPrice = productData.price - ((productData.price * offerMatch.discountPercentage) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else {
-//             let totalPrice = (quantity * productData.price);
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           }
-//         }
-//       }
-//       let cartTotalPrice = gestData.cartTotalPrice;
-//       let loged = false;
-//       if (req.session.userId) {
-//         loged = true;
-//       }
-//       return res.render('cart/cart', { cart, cartTotalPrice, category, loged, offers, productOffer });
-//     }
-
-//     if (req.session.userId) {
-//       const userData = await userSchema.findOne({ userId: req.session.userId }).populate({
-//         path: 'cart.product',
-//         model: 'products',
-//         localField: 'cart.product',
-//         foreignField: 'productId'
-//       })
-//         .populate({
-//           path: 'cart.bannerproduct',
-//           model: 'banner',
-//           localField: 'cart.bannerproduct',
-//           foreignField: 'bannerId'
-//         })
-
-
-//       // console.log(userData);
-
-//       let cart = '';
-//       cart = userData.cart;
-//       // res.send(cart)
-//       await userSchema.updateOne(
-//         { userId: req.session.userId },
-//         { $set: { cartTotalPrice: 0 } }
-//       );
-//       for (const item of cart) {
-//         if (item.product) {
-//           let productId = item.product.productId;
-//           let productData = await productSchema.findOne({ productId: productId });
-//           var quantity = item.quantity;
-//           let proOfferMatch = productOffer.find((x) => x.product_name.equals(productId));
-//           let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category));
-//           if (proOfferMatch && offerMatch) {
-//             let offerPrice = productData.price - ((productData.price * (offerMatch.discountPercentage + proOfferMatch.discountPercentage)) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await userSchema.updateOne(
-//               { userId: req.session.userId },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else if (proOfferMatch && !offerMatch) {
-//             let offerPrice = productData.price - ((productData.price * proOfferMatch.discountPercentage) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await userSchema.updateOne(
-//               { userId: req.session.userId },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else if (offerMatch && !proOfferMatch) {
-//             let offerPrice = productData.price - ((productData.price * offerMatch.discountPercentage) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await userSchema.updateOne(
-//               { userId: req.session.userId },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else {
-//             let totalPrice = (quantity * productData.price);
-//             await userSchema.updateOne(
-//               { userId: req.session.userId },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           }
-//         } else if(item.bannerproduct){
-//           let productId = item.bannerproduct.bannerId;
-//           let productData = await bannerSchema.findOne({ bannerId: productId });
-//           var quantity = item.quantity;
-//           let proOfferMatch = productOffer.find((x) => x.product_name.equals(productId));
-//           let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category));
-//           if (proOfferMatch && offerMatch) {
-//             let offerPrice = productData.price - ((productData.price * (offerMatch.discountPercentage + proOfferMatch.discountPercentage)) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await userSchema.updateOne(
-//               { userId: req.session.userId },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else if (proOfferMatch && !offerMatch) {
-//             let offerPrice = productData.price - ((productData.price * proOfferMatch.discountPercentage) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await userSchema.updateOne(
-//               { userId: req.session.userId },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else if (offerMatch && !proOfferMatch) {
-//             let offerPrice = productData.price - ((productData.price * offerMatch.discountPercentage) / 100)
-//             let totalPrice = (quantity * offerPrice);
-//             await userSchema.updateOne(
-//               { userId: req.session.userId },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           } else {
-//             let totalPrice = (quantity * productData.price);
-//             await userSchema.updateOne(
-//               { userId: req.session.userId },
-//               { $inc: { cartTotalPrice: totalPrice } }
-//             );
-//           }
-//         }
-//       }
-//       let cartTotalPrice = userData.cartTotalPrice;
-//       let loged = false;
-//       if (req.session.userId) {
-//         loged = true;
-//       }
-//       return res.render('cart/cart', { cart, cartTotalPrice, category, loged, offers, productOffer });
-//     }
-//     return res.redirect('/login')
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
-
-
-// const cart = async (req, res) => {
-//   try {
-//     const category = await categorySchema.find();
-//     const productOffer = await productOfferSchema.find({ status: 'Active' });
-//     const offers = await offerSchema.find({ status: 'Active' })
-//       .populate({
-//         path: 'category',
-//         model: 'category',
-//         localField: 'category',
-//         foreignField: 'categoryId'
-//       });
-//     if (req.session.gest_user && req.session.userId) {
-//       const gestData = await gest_userSchema.findOne({ gestId: req.session.gest_user });
-//       if (gestData.cart && gestData.cart.length > 0) {
-//         const userData = await userSchema.findOneAndUpdate(
-//           { userId: req.session.userId },
-//           {
-//             $push: { cart: { $each: gestData.cart } },
-//             $inc: { cartTotalPrice: gestData.cartTotalPrice }
-//           },
-//           { new: true }
-//         );
-//       }
-//       const deletedUser = await gest_userSchema.findOneAndDelete({ gestId: req.session.gest_user });
-//       req.session.gest_user = null;
-//     }
-//     if (req.session.gest_user && !req.session.userId) {
-//       const gestData = await gest_userSchema.findOne({ gestId: req.session.gest_user }).populate({
-//         path: 'cart.product',
-//         model: 'products',
-//         localField: 'cart.product',
-//         foreignField: 'productId'
-//       })
-//         .populate({
-//           path: 'cart.bannerproduct',
-//           model: 'banner',
-//           localField: 'cart.bannerproduct',
-//           foreignField: 'bannerId'
-//         })
-
-//       let cart = '';
-//       cart = gestData.cart;
-//        var totalTotal= 0 ;
-//        await gest_userSchema.updateOne(
-//         { gestId: req.session.gest_user },
-//         { $set: { cartTotalPrice: totalTotal } }
-//       );
-//       cart.forEach( async (item)=>{
-//         if(item.product){
-//           let productId = item.product.productId;
-//           let proOfferMatch = productOffer.find((x)=>{ x.product_name.equals(productId)})
-//           let offerMatch = offers.find((x) => x.category.categoryId.equals( item.product.category));
-//           let productData = await productSchema.findOne({productId : productId });
-
-//           if (!proOfferMatch && !offerMatch){  
-//             let total = item.quantity * productData.price;
-//             console.log('new total price ... the offer not then the total price is hear ==', total );
-//             totalTotal += total;
-
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalTotal } }
-//             );
-
-//           }else if (productOffer && offerMatch){
-//             let offerPrice = productData.price - ((productData.price * (offerMatch.discountPercentage + proOfferMatch.discountPercentage)) / 100)
-//             let total = (item.quantity * offerPrice);
-//             totalTotal += total;
-
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalTotal } }
-//             );
-
-//           } else if (!productOffer && offerMatch){
-//             let offerPrice = productData.price - ((productData.price * offerMatch.discountPercentage) / 100)
-//             let total = (item.quantity * offerPrice);
-//             totalTotal += total;
-
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalTotal } }
-//             );
-
-//           } else if (productOffer && !offerMatch){
-//             let offerPrice = productData.price - ((productData.price * proOfferMatch.discountPercentage) / 100)
-//             let total = (item.quantity * offerPrice);
-//             totalTotal += total;
-
-//             await gest_userSchema.updateOne(
-//               { gestId: req.session.gest_user },
-//               { $inc: { cartTotalPrice: totalTotal } }
-//             );
-//           }
-
-//         console.log(totalTotal,' ites new total price ')
-//         }else if (item.bannerproduct){
-
-//         }
-//       })
-//       // await gest_userSchema.updateOne(
-//       //   { gestId: req.session.gest_user },
-//       //   { $set: { cartTotalPrice: totalTotal } }
-//       // );
-//       let cartTotalPrice = gestData.cartTotalPrice;
-//       let loged = false;
-//       if (req.session.userId) {
-//         loged = true;
-//       }
-//       return res.render('cart/cart', { cart, cartTotalPrice, category, loged, offers, productOffer });
-//     }
-
-//     if (req.session.userId) {
-//       const userData = await userSchema.findOne({ userId: req.session.userId }).populate({
-//         path: 'cart.product',
-//         model: 'products',
-//         localField: 'cart.product',
-//         foreignField: 'productId'
-//       })
-//         .populate({
-//           path: 'cart.bannerproduct',
-//           model: 'banner',
-//           localField: 'cart.bannerproduct',
-//           foreignField: 'bannerId'
-//         })
-
-
-//       // console.log(userData);
-
-//       let cart = '';
-//       cart = userData.cart;
-//       // res.send(cart)
-//       let cartTotalPrice = userData.cartTotalPrice;
-//       let loged = false;
-//       if (req.session.userId) {
-//         loged = true;
-//       }
-//       return res.render('cart/cart', { cart, cartTotalPrice, category, loged, offers,productOffer });
-//     }
-//     return res.redirect('/login')
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
-
 const quntity = async (req, res) => {
   try {
     const bannerId = req.query.bannerId;
     const count = req.query.count;
     const curentquantity = req.query.curentquantity;
     const max = parseInt(req.query.max);
-    // const limit = mx;
     if (curentquantity <= 1 && count == -1) {
       return res.json({ response: 'not' });
     }
     if (max <= curentquantity && count == 1) {
-      // console.log(max, curentquantity);
-      // alert(max)
       return res.json({ response: 'not' });
     }
     const productOffer = await productOfferSchema.find({ status: 'Active' });
@@ -1273,10 +750,7 @@ const quntity = async (req, res) => {
         { gestId: req.session.gest_user, 'cart.bannerproduct': bannerId },
         { $inc: { 'cart.$.quantity': count } }
       );
-
       const productData = await bannerSchema.findOne({ bannerId: bannerId });
-
-
       if (count == -1) {
         let proOfferMatch = productOffer.find((x) => x.product_name.equals(productData.productId));
         let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category));
@@ -1342,7 +816,6 @@ const quntity = async (req, res) => {
         { $inc: { 'cart.$.quantity': count } }
       );
 
-      // cart total amount seting 
       const productData = await bannerSchema.findOne({ bannerId: bannerId });
 
       if (count == -1) {
@@ -1374,7 +847,6 @@ const quntity = async (req, res) => {
           );
         }
       } else {
-
         let proOfferMatch = productOffer.find((x) => x.product_name.equals(productData.productId));
         let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category));
         if (proOfferMatch && offerMatch) {
@@ -1416,13 +888,10 @@ const productquntity = async (req, res) => {
     const count = req.query.count;
     const curentquantity = req.query.curentquantity;
     const max = parseInt(req.query.max);
-    // const limit = mx;
     if (curentquantity <= 1 && count == -1) {
       return res.json({ response: 'not' });
     }
     if (max <= curentquantity && count == 1) {
-      // console.log(max, curentquantity);
-      // alert(max)
       return res.json({ response: 'not' });
     }
     const productOffer = await productOfferSchema.find({ status: 'Active' });
@@ -1503,7 +972,6 @@ const productquntity = async (req, res) => {
         { $inc: { 'cart.$.quantity': count } }
       );
 
-      // cart total amount seting 
       const productData = await productSchema.findOne({ productId: product });
 
       if (count == -1) {
@@ -1563,8 +1031,6 @@ const productquntity = async (req, res) => {
         }
       }
     }
-
-
     res.json({ response: 'success' });
   } catch (error) {
     console.log(error);

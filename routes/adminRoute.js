@@ -3,7 +3,6 @@ const admin_route = express(); //
 
 const nocache = require('nocache');
 
-
 admin_route.set('view engine', 'ejs');
 admin_route.set('views', './views/admin');
 
@@ -47,7 +46,6 @@ admin_route.get('/dashboard/product/edit-product:id',auth.isLogin,productControl
 admin_route.post('/dashboard/product/get-product',upload.array('images',6),productController.update_productData);
 admin_route.get('/dashboard/product/edit-product/delete-img',auth.isLogin, productController.delete_img);
 
-
 //banner
 admin_route.get('/dashboard/banner',auth.isLogin,bannerController.banner_management)
 admin_route.get('/dashboard/banner/add-banner',auth.isLogin,bannerController.add_banner)
@@ -56,7 +54,6 @@ admin_route.get('/dashboard/banner/action',auth.isLogin,bannerController.bannerB
 admin_route.get('/dashboard/banner/edit-banner:id',auth.isLogin,bannerController.edit_banner)
 admin_route.post('/dashboard/banner/get-banner',upload.array('images',6),bannerController.update_bannerData);
 admin_route.get('/dashboard/banner/edit-banner/delete-img',auth.isLogin, bannerController.delete_img);
-
 
 // order 
 admin_route.get('/dashboard/order',auth.isLogin,orderController.order_management);
