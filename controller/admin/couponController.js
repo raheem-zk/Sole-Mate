@@ -82,7 +82,14 @@ const get_coupon = async (req, res) => {
       if (data.discount < 0 || data.discount > 100) {
         return res.render('coupon/edit_coupon',{data, message: 'Invalid discount percentage. Please provide a value between 0 and 100.' });
       }
-
+      const couponDate = new Date(req.body.expiryDate);
+      const currentDate = new Date();
+      
+      if (couponDate < currentDate) {
+          data.status = "Expired";
+      } else {
+          data.status = "Active";
+      }
       await couponSchema.updateOne({_id : req.body.id}, data)
       .then(()=>{
         console.log(data.expiryDate);
