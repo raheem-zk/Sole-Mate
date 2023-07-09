@@ -6,33 +6,32 @@ const path = require('path');
 const fs = require('fs');
 const sharp = require('sharp');
 
-const product_management = async (req, res) =>{
-    try {
-        const product = await productSchema.find().populate({
-          path: 'category',
-          model: 'category',
-          localField: 'category',
-          foreignField: 'categoryId'
-        });
-        res.render('product/product_management',{product});
-    } catch (error) {
-        console.log(error);
-    }
+const product_management = async (req, res) => {
+  try {
+    const product = await productSchema.find().populate({
+      path: 'category',
+      model: 'category',
+      localField: 'category',
+      foreignField: 'categoryId'
+    })
+    return res.render('product/product_management', { product });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-const add_product = async (req, res) =>{
-    try {
-        let category = await categorySchema.find({status: true});
-        console.log(category);
-        if (category.length > 0) {
-            res.render('product/add_product', { message: '', category });
-          } else {
-            res.redirect('/admin/dashboard/category');
-          }
-    } catch (error) {
-        console.log(error);
-        res.render('404');
+const add_product = async (req, res) => {
+  try {
+    let category = await categorySchema.find({ status: true });
+    if (category.length > 0) {
+      return res.render('product/add_product', { message: '', category });
+    } else {
+      return res.redirect('/admin/dashboard/category');
     }
+  } catch (error) {
+    console.log(error);
+    res.render('404');
+  }
 }
 
 const upload_product = async (req, res) => {
@@ -49,7 +48,6 @@ const upload_product = async (req, res) => {
       !req.body.stock ||
       !req.files
     ) {
-      console.log(req.body);
       return res.render('product/add_product', { message: 'Please fill all the fields', category });
     }
 
@@ -88,9 +86,7 @@ const upload_product = async (req, res) => {
         return res.render('product/add_product', { message: "invalid file format (not an image)", category });
       }
     }
-
     data.images = ProImages;
-
     let result = await productSchema.create(data);
     return res.render('product/add_product', { message: "Product Added successfully", category });
   } catch (error) {
@@ -99,33 +95,33 @@ const upload_product = async (req, res) => {
   }
 };
 
-const productBlock = async ( req, res) =>{
+const productBlock = async (req, res) => {
   try {
-    let productId = req.query.id; 
-    let block = req.query.status; 
+    let productId = req.query.id;
+    let block = req.query.status;
     console.log(block);
     let productData = await productSchema.findOne({ productId: productId });
     if (!productData) {
       return res.redirect('/admin/dashboard/product');
     }
-    if (block == 'false') { 
-      await productSchema.updateOne({ productId: productId }, {$set:{ block: true }})
-      .then((result)=>{
-        console.log(result);
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
+    if (block == 'false') {
+      await productSchema.updateOne({ productId: productId }, { $set: { block: true } })
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
     } else {
-      await productSchema.updateOne({ productId: productId }, {$set:{ block: false }})
-      .then((result)=>{
-        console.log(result);
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
+      await productSchema.updateOne({ productId: productId }, { $set: { block: false } })
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
     }
-    res.json({ response: 'success' });
+    return res.json({ response: 'success' });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'An error occurred' });
@@ -143,8 +139,8 @@ const edit_product = async (req, res) => {
       foreignField: 'categoryId'
     });
     const category = await categorySchema.find({ status: true });
-    console.log(productData )
-    res.render('product/edit_product', { productData, message: '', category });
+    console.log(productData)
+    return res.render('product/edit_product', { productData, message: '', category });
   } catch (error) {
     console.log(error);
   }
@@ -152,7 +148,7 @@ const edit_product = async (req, res) => {
 
 const delete_img = async (req, res) => {
   try {
-    const productId = req.query.id; 
+    const productId = req.query.id;
     const imageId = req.query.img;
     console.log(productId, imageId)
     if (!productId || !imageId) {
@@ -161,14 +157,14 @@ const delete_img = async (req, res) => {
     }
     let filePath = 'public/proImages/';
     console.log(filePath)
-    fs.unlink(path.resolve(filePath,imageId), (err) => {
+    fs.unlink(path.resolve(filePath, imageId), (err) => {
       if (err) {
         console.error(err);
         return;
       }
       console.log('File successfully deleted');
     });
-    await productSchema.updateOne({ productId: productId }, { $pull: { images: {$in:imageId} } });
+    await productSchema.updateOne({ productId: productId }, { $pull: { images: { $in: imageId } } });
     // res.json({ response: 'success' });
     return res.redirect(`/admin/dashboard/product/edit-product${productId}`);
   } catch (error) {
@@ -179,29 +175,27 @@ const delete_img = async (req, res) => {
 
 
 
-const update_productData = async (req, res) =>{
+const update_productData = async (req, res) => {
   try {
     let productId = req.body.productId;
-    // console.log(req.body)
     let productData = await productSchema.findOne({ productId: productId }).populate({
       path: 'category',
       model: 'category',
       localField: 'category',
       foreignField: 'categoryId'
     });
-    const category = await categorySchema.find({status:true});
+    const category = await categorySchema.find({ status: true });
     if (
       !req.body.name ||
       !req.body.description ||
       !req.body.category ||
       !req.body.brand ||
       !req.body.price ||
-      !req.body.stock 
+      !req.body.stock
     ) {
-      console.log(req.body);
       return res.render('product/edit_product', { productData, message: 'Please fill all the fields', category });
     }
-    if (req.files.length > 6){
+    if (req.files.length > 6) {
       return res.render('product/edit_product', { productData, message: 'Image limit is 6', category });
 
     }
@@ -223,7 +217,7 @@ const update_productData = async (req, res) =>{
       price: price,
       stock: stock,
     };
-    if(req.files){
+    if (req.files) {
       const ProImages = [];
       const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
       for (const file of req.files) {
@@ -235,15 +229,15 @@ const update_productData = async (req, res) =>{
         }
       }
 
-      let oldImg = await productSchema.findOne({productId: productId});
+      let oldImg = await productSchema.findOne({ productId: productId });
       console.log(oldImg);
       oldImg = oldImg.images;
-      let newImages = [...oldImg,...ProImages];
+      let newImages = [...oldImg, ...ProImages];
       updateData.images = newImages;
     }
-    
-    
-await productSchema.updateOne({ productId: productId }, { $set: updateData });
+
+
+    await productSchema.updateOne({ productId: productId }, { $set: updateData });
     res.redirect('/admin/dashboard/product');
 
   } catch (error) {
@@ -252,12 +246,12 @@ await productSchema.updateOne({ productId: productId }, { $set: updateData });
   }
 }
 
-module.exports ={
-    product_management,
-    add_product,
-    upload_product,
-    productBlock,
-    edit_product,
-    delete_img,
-    update_productData
+module.exports = {
+  product_management,
+  add_product,
+  upload_product,
+  productBlock,
+  edit_product,
+  delete_img,
+  update_productData
 }

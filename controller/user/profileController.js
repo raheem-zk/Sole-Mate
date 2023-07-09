@@ -281,7 +281,7 @@ const my_orders = async (req, res)=>{
   try {
     const category = await categorySchema.find({status: true});
 
-    const orderData = await orderSchema.find({userId : req.session.userId});
+    const orderData = await orderSchema.find({userId : req.session.userId}).sort({date: -1});
     let loged=false;
     if(req.session.userId){
       loged = true;

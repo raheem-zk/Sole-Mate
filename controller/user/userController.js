@@ -23,7 +23,7 @@ const productOfferSchema = require('../../models/admin/product_offerModel');
 const home = async (req, res) => {
   try {
     let banner = await bannerSchema.find({ status: true, block: false });
-    let products = await productSchema.find({ status: true, block: false }).limit(12);
+    let products = await productSchema.find({ status: true, block: false }).limit(12).sort('-createdAt');
     const category = await categorySchema.find({ status: true });
     const coupon = await couponSchema.find({ status: 'Active' });
     const offers = await offerSchema.find({ status: 'Active' })

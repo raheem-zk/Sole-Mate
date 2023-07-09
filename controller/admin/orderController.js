@@ -10,7 +10,7 @@ const order_management = async (req, res) =>{
             model: 'users',
               localField: 'userId',
               foreignField: 'userId'
-            })
+            }).sort({ date: -1 });
         res.render('order/order_management',{ order });
     } catch (error) {
         console.log(error);
@@ -71,9 +71,7 @@ const order_info = async (req,res)=>{
               })
             }
 
-        res.render('order/more_details',{data ,banner, product  });
-
-        // res.render('order/order_management/more_details',{data ,banner, product});
+        return res.render('order/more_details',{data ,banner, product  });
     } catch (error) {
         console.log(error);
     }
