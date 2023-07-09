@@ -49,7 +49,8 @@
                                             id="exampleInputEmail" aria-describedby="emailHelp"
                                             placeholder="X X X X X X" >
                                     </div>
-                                    <button type="submit" class="btn btn-primary btn-user btn-block" >Validate</button>
+                                    <p id="responseMessage" class="text-center text-danger"></p>
+                                    <button type="button" onclick="otpVerification()" class="btn btn-primary btn-user btn-block" >Validate</button>
                                 </form>
                                 
                             </div>
@@ -65,3 +66,28 @@
 </div>
 
 <%- include('../layouts/admin/footer.ejs') %>
+
+
+<script>
+    function otpVerification() {
+    event.preventDefault();
+
+    // Retrieve form data
+    var formData = $('form').serialize();
+    console.log(formData);
+
+    $.ajax({
+        url: '/admin/login/otp',
+        method: 'post',
+        data: formData,
+        success: function(response) {
+            console.log(response);
+            if (response.error){
+                $('#responseMessage').text(response.error);
+            }else if (response.success){
+                window.location.href = '/admin/dashboard';
+            }
+        }
+    });
+}
+</script>

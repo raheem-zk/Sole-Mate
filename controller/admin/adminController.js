@@ -72,16 +72,17 @@ const otp = async (req, res) => {
           // OTP verification successful
           console.log(verification_check.status);
           req.session.admin = otpCode;
-          return res.redirect('/admin/dashboard');
+          return res.json({success:true});
         } else {
           // OTP verification failed
-          return res.redirect('/admin/login');
+          return res.json({error:'OTP is wrong please enter curect otp'})
         }
       })
       .catch((error) => {
         console.log(error);
         // Handle error during OTP verification
-        res.redirect('/admin/login');
+        // res.redirect('/admin/login');
+        return res.json({error:' Somthing is wrong wrong please enter curect otp'})
       });
   } catch (error) {
     console.log(error);
