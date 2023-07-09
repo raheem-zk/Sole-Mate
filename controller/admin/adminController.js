@@ -107,7 +107,6 @@ const  dashboard = async (req, res)=>{
     ]).exec()
     totalSales = totalSales[0].totalAmount;
     let customer = await userSchema.count()
-    // console.log(totalSales,'total sales');b 
     const refund = await orderSchema.count({ status: 'Returned' });
 
     let paymentType = await orderSchema.aggregate([
@@ -127,7 +126,6 @@ startOfWeek.setDate(currentDate.getDate() - currentDate.getDay()); // Get the fi
 
 const endOfWeek = new Date(currentDate);
 endOfWeek.setDate(startOfWeek.getDate() + 6); // Get the last day of the week (Saturday)
-console.log('curect date :',currentDate,'/// startOfWeek ==:', startOfWeek,'endof week is : ',endOfWeek)
 const weekSales = await orderSchema.aggregate([
   {
     $match: {
@@ -157,20 +155,16 @@ const weekSales = await orderSchema.aggregate([
       }
     }
   ]);
-  console.log(weekSalesReport[0].totalSales)
-  let thisWeeksales ;
-  if(weekSalesReport && weekSalesReport[0].totalSales){
-     thisWeeksales = weekSalesReport[0].totalSales;
-  }else{
-    thisWeeksales= 0;
+  let thisWeeksales;
+
+  if (weekSalesReport && weekSalesReport[0] && weekSalesReport[0].totalSales) {
+    thisWeeksales = weekSalesReport[0].totalSales;
+  } else {
+    thisWeeksales = 0;
   }
-  console.log(thisWeeksales)
     const weekSalesJSON = JSON.stringify(weekSales);
-    console.log(weekSalesJSON)
 
     let ship = await orderSchema.find({status: 'pending'}).count();
-    console.log(ship,'ship count');
-    // res.render('chart',{  newOrderCount ,totalSales , refund, customer, paymentType, weekSales})
     return res.render('dashboard', { newOrderCount ,totalSales , refund, customer, paymentType, weekSalesJSON,weekSales, thisWeeksales, ship});
   } catch (error) {
     console.log(error);
@@ -180,7 +174,6 @@ const weekSales = await orderSchema.aggregate([
 const user_management = async (req, res) => {
   try {
     const users = await userSchema.find();
-    console.log(users);
     res.render('user/user_management', { users });
   } catch (error) {
     console.log(error);
@@ -191,7 +184,6 @@ const userBlock = async (req, res) => {
   try {
     let userId = req.query.id; 
     let status = req.query.status; 
-    console.log(userId,'is;;;;;;;;;;;;;');
     let userData = await userSchema.findOne({ userId: userId });
     if (!userData) {
       return res.redirect('/admin/dashboard/user');
