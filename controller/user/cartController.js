@@ -674,11 +674,30 @@ const cart = async (req, res) => {
         });
 
       let cart = userData.cart;
+      var reload;
+
+      for (const item of cart) {
+        if (item.product && item.product.block == true) {
+          let result = await userSchema.updateOne(
+            { userId: req.session.userId },
+            { $pull: { cart: { product: item.product.productId } } }
+          );
+          reload = true;
+        } else if (item.bannerproduct && item.bannerproduct.block == true){
+          console.log(item.bannerproduct.bannerId)
+          let result = await userSchema.updateOne(
+            { userId: req.session.userId },
+            { $pull: { cart: { bannerproduct: item.bannerproduct.bannerId } } }
+          );
+          reload = true;
+        }
+      }
+
       await userSchema.updateOne(
         { userId: req.session.userId },
         { $set: { cartTotalPrice: 0 } }
       );
-
+      
       let totalPriceUpdate = 0;
 
       for (const item of cart) {
@@ -713,7 +732,9 @@ const cart = async (req, res) => {
 
       let cartTotalPrice = userData.cartTotalPrice;
       let loged = Boolean(req.session.userId);
-
+      if ( reload == true){
+        return res.redirect('/cart');
+      }
       return res.render('cart/cart', { cart, cartTotalPrice, category, loged, offers, productOffer });
     }
 

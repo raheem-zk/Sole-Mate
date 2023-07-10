@@ -84,7 +84,7 @@ const checkout = async (req, res) => {
         }
       }
       if (item.product) {
-        if (item.product.status === false) {
+        if (item.product.status === false || item.product.block == true) {
           await userSchema.updateOne(
             { userId: req.session.userId },
             { $pull: { cart: { product: item.product.productId } } }
@@ -121,7 +121,7 @@ const checkout = async (req, res) => {
         }
 
       } else if (item.bannerproduct) {
-        if (item.bannerproduct.status === false) {
+        if (item.bannerproduct.status === false || item.bannerproduct.block == true) {
           await userSchema.updateOne(
             { userId: req.session.userId },
             { $pull: { cart: { bannerproduct: item.bannerproduct.bannerId } } }
