@@ -71,6 +71,9 @@ const getData = async (req, res) =>{
         if (!mobileNumber) {
           return res.render('profile/edit_profile', { userData, message: 'Please enter your mobile number' , category ,loged});
         }
+        if (mobileNumber.length != 10){
+          return res.render('profile/edit_profile', { userData, message: 'Please enter your correct number' , category ,loged});
+        }
         data.mobileNumber = mobileNumber;
         
         let currentPassword;
