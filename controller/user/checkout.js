@@ -67,6 +67,14 @@ const checkout = async (req, res) => {
           : await bannerSchema.findOne({ bannerId: productId });
 
         let quantity = item.quantity;
+        if (quantity < 0){
+          if (item.product){
+            await userSchema.updateOne({userId : req.session.userId, 'cart.product': productId },{ $set: { 'cart.$.quantity':1 }});
+          }else if (item.bannerproduct){
+            await userSchema.updateOne({userId : req.session.userId, 'cart.product': productId },{ $set: { 'cart.$.quantity':1 }});
+          }
+          return res.redirect('/cart');
+        }
         let proOfferMatch = productOffer.find((x) => x.product_name.equals(productId));
         let offerMatch = offers.find((x) => x.category.categoryId.equals(productData.category));
 
@@ -188,8 +196,8 @@ const checkout = async (req, res) => {
     if (couponCode) {
       const currentDate = new Date();
       const coupon = await couponSchema.findOne({ couponName: couponCode });
-
-      if (data.cartTotalPrice < coupon.minimumPrice || coupon.expiryDate >= currentDate) {
+      console.log(coupon);
+      if (data.cartTotalPrice < coupon.minimumPrice || coupon.expiryDate <= currentDate) {
         let result = await userSchema.updateOne({ userId: req.session.userId }, { $set: { discount: {} } });
         if (result) {
           let data = await userSchema
@@ -524,6 +532,7 @@ const applay_coupon = async (req, res) => {
     if (!couponCode || !total) {
       return res.json({ response: ' Enter coupon code' });
     }
+    console.log(total,'hhhhhh')
     const couponData = await couponSchema.findOne({ couponName: couponCode, status: 'Active' });
     const currentDate = new Date();
 
@@ -569,7 +578,7 @@ const applay_coupon = async (req, res) => {
       { $set: { 'discount.0': data } }
     )
       .then((result) => {
-        // console.log('discount added', result)
+        console.log('discount added', result)
       })
       .catch((err) => {
         console.log(err);

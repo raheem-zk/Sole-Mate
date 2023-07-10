@@ -46,9 +46,9 @@ const edit = async (req, res) =>{
 
 const getData = async (req, res) =>{
     try {
-        const name = req.body.name;
-        const email = req.body.email;
-        const mobileNumber = req.body.mobileNumber;
+        const name = req.body.name.trim();
+        const email = req.body.email.trim();
+        const mobileNumber = req.body.mobileNumber.trim();
         const category = await categorySchema.find({status: true});
         
         const userData = await userSchema.findOne({ userId: req.session.userId });
@@ -87,12 +87,12 @@ const getData = async (req, res) =>{
               return res.render('profile/edit_profile', { userData, message: 'Please confirm your new password' ,category, loged});
             }
         //   return res.send(req.body);
-          currentPassword = req.body.current_password;
-          newPassword = req.body.new_password;
-          confirmPassword = req.body.confirm_password;
+          currentPassword = req.body.current_password.trim();
+          newPassword = req.body.new_password.trim();
+          confirmPassword = req.body.confirm_password.trim();
           const compare = await bcrypt.compare(currentPassword, userData.password);
           if (!compare) {
-            return res.render('profile/edit_profile', { message: 'Incorrect password', category, loged });
+            return res.render('profile/edit_profile', { userData, message: 'Incorrect password' , category, loged});
           }
     
           if (newPassword.length < 6 || confirmPassword.length < 6) {
@@ -128,8 +128,10 @@ const otpVerification = async (req, res) => {
       userData.password = req.body.newPassword;
     }
 
-    const otpCode = req.body.otp;
-
+    const otpCode = req.body.otp.trim();
+    if (otpCode.length != 6){
+      return res.json({ error: 'wrong otp' });
+    }
     client.verify
       .services(verifySid)
       .verificationChecks.create({ to: `+91${userData.mobileNumber}`, code: otpCode })
@@ -184,14 +186,14 @@ const get_address = async (req, res) => {
   try {
     const category = await categorySchema.find({status: true});
     let data = {
-      name: req.body.name,
-      housename: req.body.housename,
-      street: req.body.street,
-      district: req.body.district,
-      state: req.body.state,
-      pincode: req.body.pincode,
-      country: req.body.country,
-      phone: req.body.number
+      name: req.body.name.trim(),
+      housename: req.body.housename.trim(),
+      street: req.body.street.trim(),
+      district: req.body.district.trim(),
+      state: req.body.state.trim(),
+      pincode: req.body.pincode.trim(),
+      country: req.body.country.trim(),
+      phone: req.body.number.trim()
     }
 
     if (!req.body.name || !req.body.street || !req.body.state || !req.body.pincode || !req.body.housename || !req.body.district || !req.body.country || !req.body.number) {
@@ -233,14 +235,14 @@ const update_address = async (req, res)=>{
   try {
     const category = await categorySchema.find({status: true});
     let data = {
-      name: req.body.name,
-      housename: req.body.housename,
-      street: req.body.street,
-      district: req.body.district,
-      state: req.body.state,
-      pincode: req.body.pincode,
-      country: req.body.country,
-      phone: req.body.number
+      name: req.body.name.trim(),
+      housename: req.body.housename.trim(),
+      street: req.body.street.trim(),
+      district: req.body.district.trim(),
+      state: req.body.state.trim(),
+      pincode: req.body.pincode.trim(),
+      country: req.body.country.trim(),
+      phone: req.body.number.trim()
     }
 
     const addressId = req.body.addressId;
