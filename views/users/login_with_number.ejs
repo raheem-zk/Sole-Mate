@@ -9,7 +9,7 @@
           <p>Get access to your <br> Orders, Wishlist and <br> Recommendations</p>
           <div class="row login_form" id="contactForm" novalidate="novalidate">
             <div class="col-md-12 form-group">
-              <input required type="number" name="mobile" class="form-control text-center" id="mobileNumber" placeholder="Mobile Number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile Number'">
+              <input required type="number" name="mobile" class="form-control text-center" id="mobileNumber" placeholder="Mobile Number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile Number'" maxlength="10">
             </div>
             <div class="col-md-12 form-group">
               <button type="button" onclick="login_with_number()" class=" primary-btn ">Log In</button> 
@@ -23,7 +23,7 @@
 
           <div class="row login_form" id="contactForm" novalidate="novalidate">
             <div class="col-md-12 form-group">
-              <input required type="number" name="otp" maxlength="6" class="form-control text-center" id="otpCode" placeholder="X X X X X X">
+              <input required type="number" name="otp" maxlength="6" class="form-control text-center" id="otpCode" placeholder="X X X X X X" maxlength="6">
             </div>
             <div class="col-md-12 form-group">
               <button type="button" onclick="otp_verify()" class="primary-btn">Validate</button>

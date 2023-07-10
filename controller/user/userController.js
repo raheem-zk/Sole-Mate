@@ -57,13 +57,16 @@ const loadRegister = async (req, res) => {
 
 const insertUser = async (req, res) => {
   try {
-    if (!req.body.name || !req.body.email || !req.body.mobile || !req.body.password) {
+    if (!req.body.name.trim() || !req.body.email.trim() || !req.body.mobile.trim() || !req.body.password.trim()) {
       return res.render('registration', { message: 'please fill the feald.' })
     }
     if (req.body.password.length < 6) {
-      return res.render('registration', { message: 'enter Strong Password.' })
+      return res.render('registration', { message: 'Please enter a strong password.' })
     }
-    if (req.body.mobile.length != 10) {
+    if (req.body.password.includes(' ')) {
+      return res.render('registration', { message: 'Invalid password. Password should not contain spaces.' });
+    }
+    if (req.body.mobile.length != 10 || isNaN(req.body.mobile) ) {
       return res.render('registration', { message: 'Mobile number is incorect.' })
     }
     let existed = await User.exists({
@@ -108,17 +111,19 @@ const registerotp = async (req, res) => {
     let otpCode = req.body.otp;
     const userId = new mongoose.Types.ObjectId();
     const referral_code = referralCodes.generate(); // Generate a random referral code
-
+    if(otpCode.length !=6){
+      return res.json({ message: 'OTP is wrong please enter curect otp' })
+    }
     let userData = {
       userId: userId,
-      name: req.body.name,
+      name: req.body.name.trim(),
       mobileNumber: req.body.mobile,
-      email: req.body.email,
-      password: req.body.password,
+      email: req.body.email.trim(),
+      password: req.body.password.trim(),
       referral_code: referral_code[0],
     };
     if (req.body.parentReferral) {
-      var parentReferral = req.body.parentReferral;
+      var parentReferral = req.body.parentReferral.trim();
       userData.wallet = 100;
     }
 
@@ -168,8 +173,8 @@ const verifyLogin = async (req, res) => {
       return res.render('login', { message: 'Please fill in the fields.' });
     }
     let userData = {
-      email: req.body.email,
-      password: req.body.password,
+      email: req.body.email.trim(),
+      password: req.body.password.trim(),
     };
 
     let result = await User.findOne({ email: userData.email });
@@ -188,7 +193,7 @@ const verifyLogin = async (req, res) => {
         return res.render('login', { message: 'User is blocked' });
       }
     } else {
-      return res.redirect('/login');
+      return res.render('login', { message: 'User not found. Please check your email or sign up for a new account.' });
     }
   } catch (error) {
     console.log(error);
@@ -207,7 +212,7 @@ const forgot_password = async (req, res) => {
 
 const getNumber = async (req, res) => {
   try {
-    const mobileNumber = req.body.mobileNumber;
+    const mobileNumber = req.body.mobileNumber.trim();
     if (!mobileNumber) {
       return res.render('forgot-password', { message: 'Please Enter your mobile number' });
     }
@@ -231,6 +236,9 @@ const verifyOtp = async (req, res) => {
   try {
     const otpCode = req.body.otp;
     const number = req.body.number;
+    if(otpCode.length != 6){
+      return res.render('forgot-password', { message: 'The OTP is not correct. Please try again.' });
+    }
     client.verify.v2
       .services(verifySid)
       .verificationChecks.create({ to: `+91${number}`, code: otpCode })
@@ -253,9 +261,12 @@ const verifyOtp = async (req, res) => {
 
 const reset_password = async (req, res) => {
   try {
-    const number = req.body.number;
+    const number = req.body.number.trim();
     const newPassword = req.body.newPassword;
     const ConformPassword = req.body.ConformPassword;
+    if(newPassword.includes(' ')){
+      return res.render('reset_password', { number, message: 'Invalid password. Password should not contain spaces.' })
+    }
     if (newPassword.length < 6) {
       return res.render('reset_password', { number, message: 'Please enter a strong password' })
     }
@@ -290,7 +301,10 @@ const login_with_number = async (req, res) => {
 
 const verify_number = async (req, res) => {
   try {
-    const number = req.body.number;
+    const number = req.body.number.trim();
+    if(number.length !=10){
+      return res.json({ response: { error: "Invaleid number" } });
+    }
     const userFind = await userSchema.findOne({ mobileNumber: number })
     if (!userFind) {
       return res.json({ response: { error: "User not found" } });
@@ -308,9 +322,11 @@ const verify_number = async (req, res) => {
 
 const verify_otp = async (req, res) => {
   try {
-    const otpCode = req.body.otp;
-    const number = req.body.number;
-   
+    const otpCode = req.body.otp.trim();
+    const number = req.body.number.trim();
+    if (otpCode.length != 6){
+      return res.json({ response: { error: true } });
+    }
     client.verify.v2
       .services(verifySid)
       .verificationChecks.create({ to: `+91${number}`, code: otpCode })
