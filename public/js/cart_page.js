@@ -76,6 +76,8 @@ function quantity(bannerId,count,curentquantity,max){
     success:(response)=>{
       $(`.input-group-${bannerId}`).load(`/cart .input-group-${bannerId}`);
       $('.totalProce').load('/cart .totalProce');
+      $(`#Total-${bannerId}`).load(`/cart #Total-${bannerId}`);
+
 
 
       $(`#quantity-input${bannerId}`).load(`/cart #quantity-input${bannerId}`)
@@ -90,6 +92,7 @@ function productquantity(productId,count,curentquantity,max){
     success:(response)=>{
       $(`.input-group-${productId}`).load(`/cart .input-group-${productId}`);
       $('.totalProce').load('/cart .totalProce');
+      $(`#Total-${productId}`).load(`/cart #Total-${productId}`);
 
 
       $(`#quantity-input${productId}`).load(`/cart #quantity-input${productId}`)
