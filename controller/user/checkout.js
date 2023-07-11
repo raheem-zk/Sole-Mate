@@ -323,6 +323,9 @@ const order = async (req, res) => {
         return res.json({ response: { wrong: 'Insufficient wallet balance. Please add funds to your wallet' } })
       }
     } else {
+      if (newOrder.total <= 0){
+        return res.json({ response: { wrong: 'Invalid order total. Please provide a positive value.' } })
+      }
       await orderSchema.insertMany(newOrder);
       await userSchema.updateOne(
         { userId: req.session.userId },
@@ -429,12 +432,15 @@ const verifyPayment = async (req, res) => {
     const generated_signature = hmac.digest('hex');
     if (generated_signature === razorpay_signature) {
       newOrder.status = 'processing';
+      if (newOrder.total <= 0){
+        return res.json({ failed: true });
+      }
       await orderSchema.insertMany(newOrder);
       await userSchema.updateOne(
         { userId: req.session.userId },
         { $unset: { cart: 1, cartTotalPrice: 1 } }
       )
-      res.json({ status: true });
+      return res.json({ status: true });
     } else {
 
       await userSchema.updateOne(
@@ -442,7 +448,7 @@ const verifyPayment = async (req, res) => {
         { $set: { discount: {} } }
       );
 
-      res.json({ failed: true });
+      return res.json({ failed: true });
     }
   } catch (error) {
     console.log(error);
@@ -485,14 +491,14 @@ const get_address = async (req, res) => {
       loged = true;
     }
     let data = {
-      name: req.body.name,
-      housename: req.body.housename,
-      street: req.body.street,
-      district: req.body.district,
-      state: req.body.state,
-      pincode: req.body.pincode,
-      country: req.body.country,
-      phone: req.body.number
+      name: req.body.name.trim(),
+      housename: req.body.housename.trim(),
+      street: req.body.street.trim(),
+      district: req.body.district.trim(),
+      state: req.body.state.trim(),
+      pincode: req.body.pincode.trim(),
+      country: req.body.country.trim(),
+      phone: req.body.number.trim()
     }
 
     if (!req.body.name || !req.body.street || !req.body.state || !req.body.pincode || !req.body.housename || !req.body.district || !req.body.country || !req.body.number) {

@@ -61,6 +61,9 @@ const upload_product = async (req, res) => {
     if (isNaN(stock) || stock <= 0) {
       return res.render('product/add_product', { message: 'Invalid stock', category });
     }
+    if (isNaN(stock) || stock > 100) {
+      return res.render('product/add_product', { message: 'Invalid stock', category });
+    }
 
     const productId = new mongoose.Types.ObjectId(); // Generate a new ObjectId
 
@@ -197,7 +200,6 @@ const update_productData = async (req, res) => {
     }
     if (req.files.length > 6) {
       return res.render('product/edit_product', { productData, message: 'Image limit is 6', category });
-
     }
     const price = parseFloat(req.body.price);
     const stock = parseInt(req.body.stock);
@@ -207,6 +209,9 @@ const update_productData = async (req, res) => {
     }
 
     if (isNaN(stock) || stock <= 0) {
+      return res.render('product/edit_product', { productData, message: 'Invalid stock', category });
+    }
+    if (isNaN(stock) || stock > 100) {
       return res.render('product/edit_product', { productData, message: 'Invalid stock', category });
     }
     let updateData = {

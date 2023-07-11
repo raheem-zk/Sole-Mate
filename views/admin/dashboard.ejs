@@ -231,7 +231,6 @@
           }
         }
       });
-  
       const data = {
         labels: ['<%= paymentType[0]._id %>', '<%= paymentType[1]._id %>', '<%= paymentType[2]._id %>'],
         datasets: [{
@@ -245,6 +244,7 @@
           hoverOffset: 4
         }]
       };
+    
   
       const ctxx = document.getElementById('myChart2');
       new Chart(ctxx, {

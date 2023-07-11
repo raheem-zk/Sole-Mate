@@ -1,5 +1,15 @@
 <%- include('../../layouts/admin/header.ejs') %>
+<style>
+  .hover-element {
+  /* Define the default cursor style using Bootstrap classes */
+  cursor: default;
+}
 
+.hover-element:hover {
+  /* Change the cursor style on hover using Bootstrap classes */
+  cursor: pointer;
+}
+</style>
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
@@ -78,9 +88,9 @@
                                                               <%= item.status %>
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                              <a class="dropdown-item" onclick="orderAction('<%= item.orderId%>','processing')">Processing</a>
-                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','shipped')">Shipped</a>
-                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','delivered')">Delivered</a>
+                                                              <a class="dropdown-item hover-element" onclick="orderAction('<%= item.orderId%>','processing')">Processing</a>
+                                                              <a class="dropdown-item hover-element"  onclick="orderAction('<%= item.orderId%>','shipped')">Shipped</a>
+                                                              <a class="dropdown-item hover-element"  onclick="orderAction('<%= item.orderId%>','delivered')">Delivered</a>
                                                             </div>
                                                           </div>
                                                         <% } else if (item.status === 'processing') { %>
@@ -89,8 +99,8 @@
                                                               <%= item.status %>
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','shipped')">Shipped</a>
-                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','delivered')">Delivered</a>
+                                                              <a class="dropdown-item hover-element"  onclick="orderAction('<%= item.orderId%>','shipped')">Shipped</a>
+                                                              <a class="dropdown-item hover-element"  onclick="orderAction('<%= item.orderId%>','delivered')">Delivered</a>
                                                             </div>
                                                           </div>
                                                         <% } else if (item.status === 'shipped') { %>
@@ -99,7 +109,7 @@
                                                               <%= item.status %>
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','delivered')">Delivered</a>
+                                                              <a class="dropdown-item hover-element"  onclick="orderAction('<%= item.orderId%>','delivered')">Delivered</a>
                                                             </div>
                                                           </div>
                                                         <% } else if (item.status === 'Returned') { %>
@@ -108,8 +118,8 @@
                                                               Refund request
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','refunded')">Refund</a>
-                                                              <a class="dropdown-item"  onclick="orderAction('<%= item.orderId%>','norefund')">No Refund</a>
+                                                              <a class="dropdown-item hover-element"  onclick="orderAction('<%= item.orderId%>','refunded')">Refund</a>
+                                                              <a class="dropdown-item hover-element"  onclick="orderAction('<%= item.orderId%>','norefund')">No Refund</a>
                                                             </div>
                                                           </div>
                                                         <% } %>
