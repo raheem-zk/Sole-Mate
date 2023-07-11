@@ -24,6 +24,24 @@ const home = async (req, res) => {
   try {
     let banner = await bannerSchema.find({ status: true, block: false });
     let products = await productSchema.find({ status: true, block: false }).limit(12).sort('-createdAt');
+
+    const currentDate = new Date();
+    const categoryoffers = await offerSchema.find();
+    categoryoffers.forEach(async(x)=>{
+      if (x.endDate <= currentDate ){
+        await offerSchema.updateOne({_id: x._id},{$set: {status: 'Expired'}})
+      }else{
+        await offerSchema.updateOne({_id: x._id},{$set: {status: 'Active'}})
+      }
+    });
+    let productOfferCheck = await productOfferSchema.find();
+    productOfferCheck.forEach(async(x)=>{
+      if ( x.endDate <= currentDate ){
+        await productOfferSchema.updateOne({_id: x._id}, {$set:{status: 'Expired'}})
+      }else{
+        await productOfferSchema.updateOne({_id: x._id}, {$set:{status: 'Active'}})
+      }
+    })
     const category = await categorySchema.find({ status: true });
     const coupon = await couponSchema.find({ status: 'Active' });
     const offers = await offerSchema.find({ status: 'Active' })

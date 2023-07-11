@@ -70,10 +70,10 @@ user_route.get('/banner-product-detail/:id', productController.bannerproduct_det
 
 // whish list 
 user_route.get('/wihshlist', auth.isLogin, wishlistController.wishlist);
-user_route.get('/add-wishlist/:id',auth.isLogin, wishlistController.add);
-user_route.get('/add-wishlist-bannerproduct/:id',auth.isLogin, wishlistController.addBannerProduct);
-user_route.get('/wihshlist/remove/:id',auth.isLogin, wishlistController.remove);
-user_route.get('/wihshlist/remove-banner/:id',auth.isLogin, wishlistController.remove_bannerItem);
+user_route.get('/add-wishlist/:id', auth.isLogin, wishlistController.add);
+user_route.get('/add-wishlist-bannerproduct/:id', auth.isLogin, wishlistController.addBannerProduct);
+user_route.get('/wihshlist/remove/:id', auth.isLogin, wishlistController.remove);
+user_route.get('/wihshlist/remove-banner/:id', auth.isLogin, wishlistController.remove_bannerItem);
 
 // checkout 
 user_route.get('/cart/checkout', auth.isLogin, checkoutCotroller.checkout)

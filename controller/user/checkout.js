@@ -67,11 +67,11 @@ const checkout = async (req, res) => {
           : await bannerSchema.findOne({ bannerId: productId });
 
         let quantity = item.quantity;
-        if (quantity < 0){
-          if (item.product){
-            await userSchema.updateOne({userId : req.session.userId, 'cart.product': productId },{ $set: { 'cart.$.quantity':1 }});
-          }else if (item.bannerproduct){
-            await userSchema.updateOne({userId : req.session.userId, 'cart.product': productId },{ $set: { 'cart.$.quantity':1 }});
+        if (quantity < 0) {
+          if (item.product) {
+            await userSchema.updateOne({ userId: req.session.userId, 'cart.product': productId }, { $set: { 'cart.$.quantity': 1 } });
+          } else if (item.bannerproduct) {
+            await userSchema.updateOne({ userId: req.session.userId, 'cart.product': productId }, { $set: { 'cart.$.quantity': 1 } });
           }
           return res.redirect('/cart');
         }
@@ -323,7 +323,7 @@ const order = async (req, res) => {
         return res.json({ response: { wrong: 'Insufficient wallet balance. Please add funds to your wallet' } })
       }
     } else {
-      if (newOrder.total <= 0){
+      if (newOrder.total <= 0) {
         return res.json({ response: { wrong: 'Invalid order total. Please provide a positive value.' } })
       }
       await orderSchema.insertMany(newOrder);
@@ -432,7 +432,7 @@ const verifyPayment = async (req, res) => {
     const generated_signature = hmac.digest('hex');
     if (generated_signature === razorpay_signature) {
       newOrder.status = 'processing';
-      if (newOrder.total <= 0){
+      if (newOrder.total <= 0) {
         return res.json({ failed: true });
       }
       await orderSchema.insertMany(newOrder);
@@ -507,7 +507,7 @@ const get_address = async (req, res) => {
     if (data.phone.length != 10) {
       return res.render('cart/add-address', { message: 'Please fill all the fields', category, loged });
     }
-    if (data.pincode.length !=6) {
+    if (data.pincode.length != 6) {
       return res.render('cart/add-address', { message: 'Please enter the curect pincode', category, loged });
     }
     let userData = await userSchema.findOne({ userId: req.session.userId });
@@ -538,7 +538,6 @@ const applay_coupon = async (req, res) => {
     if (!couponCode || !total) {
       return res.json({ response: ' Enter coupon code' });
     }
-    console.log(total,'hhhhhh')
     const couponData = await couponSchema.findOne({ couponName: couponCode, status: 'Active' });
     const currentDate = new Date();
 
