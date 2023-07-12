@@ -67,11 +67,11 @@ const checkout = async (req, res) => {
           : await bannerSchema.findOne({ bannerId: productId });
 
         let quantity = item.quantity;
-        if (quantity < 0) {
+        if (quantity <= 0) {
           if (item.product) {
             await userSchema.updateOne({ userId: req.session.userId, 'cart.product': productId }, { $set: { 'cart.$.quantity': 1 } });
           } else if (item.bannerproduct) {
-            await userSchema.updateOne({ userId: req.session.userId, 'cart.product': productId }, { $set: { 'cart.$.quantity': 1 } });
+            await userSchema.updateOne({ userId: req.session.userId, 'cart.bannerproduct': productId }, { $set: { 'cart.$.quantity': 1 } });
           }
           return res.redirect('/cart');
         }
